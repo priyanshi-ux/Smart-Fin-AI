@@ -1,3 +1,4 @@
+
 /* =========================
    GLOBAL
 ========================= */
@@ -9,6 +10,7 @@
 html {
     width: 100%;
     overflow-x: hidden;
+    scroll-behavior: smooth;
 }
 
 body {
@@ -18,6 +20,12 @@ body {
     background: #f5f7fa;
     width: 100%;
     overflow-x: hidden;
+    color: #222;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
 }
 
 /* =========================
@@ -29,7 +37,7 @@ header {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 15px;
     padding: 15px 25px;
     background: #2b3cff;
     color: white;
@@ -42,11 +50,16 @@ header p {
     margin: 0;
 }
 
+header h1 {
+    font-size: 25px;
+}
+
 nav {
     display: flex;
     align-items: center;
+    justify-content: center;
     flex-wrap: wrap;
-    gap: 5px;
+    gap: 4px;
 }
 
 nav a {
@@ -54,10 +67,13 @@ nav a {
     margin: 5px 8px;
     text-decoration: none;
     white-space: nowrap;
+    font-size: 15px;
+    transition: opacity 0.2s ease;
 }
 
 nav a:hover {
     text-decoration: underline;
+    opacity: 0.9;
 }
 
 /* =========================
@@ -75,16 +91,23 @@ nav a:hover {
     color: white;
 }
 
+.hero > div {
+    width: 100%;
+    max-width: 900px;
+}
+
 .hero h1 {
     font-size: 50px;
     line-height: 1.15;
     margin: 0 0 20px;
+    word-wrap: break-word;
 }
 
 .hero p {
     max-width: 700px;
     margin: 0 auto 25px;
     line-height: 1.6;
+    font-size: 16px;
 }
 
 /* =========================
@@ -92,7 +115,7 @@ nav a:hover {
 ========================= */
 
 button {
-    padding: 10px 20px;
+    padding: 11px 20px;
     background: #2b3cff;
     color: white;
     border: none;
@@ -100,6 +123,7 @@ button {
     cursor: pointer;
     font-size: 15px;
     transition: 0.2s ease;
+    min-height: 44px;
 }
 
 button:hover {
@@ -116,12 +140,19 @@ button:hover {
 }
 
 input {
-    padding: 10px;
+    padding: 11px 12px;
     margin: 10px;
     width: 200px;
     max-width: calc(100% - 20px);
     border: 1px solid #ccc;
     border-radius: 6px;
+    font-size: 15px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #2b3cff;
+    box-shadow: 0 0 0 3px rgba(43, 60, 255, 0.1);
 }
 
 /* =========================
@@ -133,6 +164,10 @@ input {
     padding: 50px 20px;
     background: #111;
     color: white;
+}
+
+.about h2 {
+    margin-top: 0;
 }
 
 .about p {
@@ -150,8 +185,8 @@ input {
     justify-content: center;
     align-items: stretch;
     flex-wrap: wrap;
-    gap: 15px;
-    padding: 20px;
+    gap: 20px;
+    padding: 30px 20px;
 }
 
 .card {
@@ -161,6 +196,8 @@ input {
     border-radius: 10px;
     max-width: 350px;
     width: 100%;
+    background: white;
+    overflow-wrap: break-word;
 }
 
 /* =========================
@@ -178,42 +215,80 @@ input {
 }
 
 /* =========================
+   TABLE / LONG CONTENT SAFETY
+========================= */
+
+table {
+    max-width: 100%;
+}
+
+pre,
+code {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+/* =========================
    MOBILE RESPONSIVE
 ========================= */
 
 @media (max-width: 768px) {
 
+    /* HEADER */
+
     header {
-        padding: 15px;
+        padding: 14px 12px;
         flex-direction: column;
+        align-items: center;
         text-align: center;
+        gap: 10px;
+    }
+
+    header h1 {
+        font-size: 22px;
     }
 
     nav {
-        justify-content: center;
         width: 100%;
+        justify-content: center;
+        gap: 3px;
     }
 
     nav a {
-        margin: 5px 7px;
+        margin: 4px 6px;
         font-size: 14px;
     }
 
+    /* HERO */
+
     .hero {
-        min-height: 70vh;
-        padding: 50px 18px;
+        min-height: auto;
+        padding: 65px 18px;
     }
 
     .hero h1 {
-        font-size: 36px;
+        font-size: clamp(30px, 8vw, 38px);
+        line-height: 1.15;
+        margin-bottom: 18px;
     }
 
     .hero p {
         font-size: 15px;
+        line-height: 1.6;
+        margin-bottom: 22px;
     }
 
+    /* BUTTONS */
+
+    button {
+        min-height: 46px;
+        padding: 11px 18px;
+    }
+
+    /* BUDGET */
+
     #budget {
-        padding: 30px 15px;
+        padding: 35px 16px;
     }
 
     input {
@@ -222,29 +297,45 @@ input {
         margin: 7px 0;
     }
 
-    button {
+    #budget button {
         width: 100%;
-        max-width: 100%;
         margin-top: 8px;
     }
 
+    /* ABOUT */
+
     .about {
-        padding: 40px 18px;
+        padding: 45px 18px;
     }
+
+    .about p {
+        font-size: 15px;
+        line-height: 1.7;
+    }
+
+    /* CARDS */
 
     .cards {
         flex-direction: column;
-        align-items: center;
-        padding: 15px;
+        align-items: stretch;
+        padding: 20px 15px;
+        gap: 15px;
     }
 
     .card {
         width: 100%;
-        max-width: 500px;
+        max-width: none;
+        padding: 20px;
     }
 
+    /* CONTACT */
+
     .contact {
-        padding: 40px 18px;
+        padding: 45px 18px;
+    }
+
+    .contact form {
+        width: 100%;
     }
 }
 
@@ -254,36 +345,107 @@ input {
 
 @media (max-width: 480px) {
 
-    .hero {
-        min-height: 65vh;
-        padding: 40px 15px;
+    /* HEADER */
+
+    header {
+        padding: 13px 10px;
     }
 
-    .hero h1 {
-        font-size: 30px;
-    }
-
-    .hero p {
-        font-size: 14px;
+    header h1 {
+        font-size: 21px;
     }
 
     nav {
-        gap: 2px;
+        gap: 0;
     }
 
     nav a {
         font-size: 13px;
-        margin: 4px;
+        margin: 4px 5px;
+    }
+
+    /* HERO */
+
+    .hero {
+        min-height: auto;
+        padding: 55px 15px;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+        line-height: 1.18;
+    }
+
+    .hero p {
+        font-size: 14px;
+        line-height: 1.65;
+    }
+
+    /* BUTTONS */
+
+    button {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* CARDS */
+
+    .cards {
+        padding: 18px 12px;
     }
 
     .card {
-        padding: 16px;
+        padding: 17px;
+        border-radius: 10px;
     }
+
+    .card h3 {
+        font-size: 19px;
+    }
+
+    .card p {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    /* SECTIONS */
 
     #budget,
     .about,
     .contact {
         padding-left: 15px;
         padding-right: 15px;
+    }
+}
+
+/* =========================
+   VERY SMALL PHONES
+========================= */
+
+@media (max-width: 360px) {
+
+    header h1 {
+        font-size: 19px;
+    }
+
+    nav a {
+        font-size: 12px;
+        margin: 3px 4px;
+    }
+
+    .hero {
+        padding: 45px 12px;
+    }
+
+    .hero h1 {
+        font-size: 27px;
+    }
+
+    .hero p {
+        font-size: 13px;
+    }
+
+    .card {
+        padding: 15px;
     }
 }
