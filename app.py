@@ -861,6 +861,125 @@ def delete_transaction(transaction_id):
 
     return redirect("/dashboard")
 # =========================
+# FORGOT PASSWORD
+# =========================
+
+@app.route("/forgot-password", methods=["GET", "POST"])
+def forgot_password():
+
+    if request.method == "POST":
+
+        username = request.form.get(
+            "username",
+            ""
+        ).strip()
+
+        email = request.form.get(
+            "email",
+            ""
+        ).strip().lower()
+
+        new_password = request.form.get(
+            "new_password",
+            ""
+        )
+
+        confirm_password = request.form.get(
+            "confirm_password",
+            ""
+        )
+
+        # -------------------------
+        # Validate required fields
+        # -------------------------
+
+        if not username or not email or not new_password or not confirm_password:
+
+            flash(
+                "Please fill all fields.",
+                "info"
+            )
+
+            return redirect("/forgot-password")
+
+        # -------------------------
+        # Check password length
+        # -------------------------
+
+        if len(new_password) < 8:
+
+            flash(
+                "Password must contain at least 8 characters.",
+                "info"
+            )
+
+            return redirect("/forgot-password")
+
+        # -------------------------
+        # Check password match
+        # -------------------------
+
+        if new_password != confirm_password:
+
+            flash(
+                "Passwords do not match.",
+                "info"
+            )
+
+            return redirect("/forgot-password")
+
+        # -------------------------
+        # Find account
+        # -------------------------
+
+        user = User.query.filter_by(
+            username=username,
+            email=email
+        ).first()
+
+        if not user:
+
+            flash(
+                "No account found with this username and email.",
+                "info"
+            )
+
+            return redirect("/forgot-password")
+
+        # -------------------------
+        # Update password
+        # -------------------------
+
+        user.password = bcrypt.generate_password_hash(
+            new_password
+        ).decode("utf-8")
+
+        try:
+
+            db.session.commit()
+
+            flash(
+                "Password reset successfully! Please login with your new password.",
+                "success"
+            )
+
+            return redirect("/login")
+
+        except Exception:
+
+            db.session.rollback()
+
+            flash(
+                "Unable to reset password. Please try again.",
+                "info"
+            )
+
+            return redirect("/forgot-password")
+
+    return render_template(
+        "forgot_password.html"
+    )
+# =========================
 # LOGOUT
 # =========================
 
