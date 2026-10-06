@@ -2,12 +2,8 @@ from flask import Flask, render_template, request, redirect, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from sqlalchemy.exc import IntegrityError
+from datetime import datetime
 import os
-
-
-# =========================================================
-# APP CONFIGURATION
-# =========================================================
 
 app = Flask(__name__)
 
@@ -23,747 +19,469 @@ db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
 
-# =========================================================
-# DATABASE MODELS
-# =========================================================
+# =========================
+# MODELS
+# =========================
 
 class User(db.Model):
-
-    id = db.Column(
-        db.Integer,
-        primary_key=True
-    )
-
-    full_name = db.Column(
-        db.String(120),
-        nullable=False
-    )
-
-    email = db.Column(
-        db.String(150),
-        unique=True,
-        nullable=False
-    )
-
-    username = db.Column(
-        db.String(100),
-        unique=True,
-        nullable=False
-    )
-
-    password = db.Column(
-        db.String(200),
-        nullable=False
-    )
-
-    monthly_income = db.Column(
-        db.Float,
-        default=0
-    )
-
-    financial_goal = db.Column(
-        db.String(200),
-        default=""
-    )
+    id = db.Column(db.Integer, primary_key=True)
+    full_name = db.Column(db.String(120), nullable=False)
+    email = db.Column(db.String(150), unique=True, nullable=False)
+    username = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)
+    monthly_income = db.Column(db.Float, default=0)
+    financial_goal = db.Column(db.String(200), default="")
 
 
 class Finance(db.Model):
-
-    id = db.Column(
-        db.Integer,
-        primary_key=True
-    )
-
-    user = db.Column(
-        db.String(100),
-        nullable=False
-    )
-
-    income = db.Column(
-        db.Float,
-        default=0
-    )
-
-    expense = db.Column(
-        db.Float,
-        default=0
-    )
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.String(100), nullable=False)
+    income = db.Column(db.Float, default=0)
+    expense = db.Column(db.Float, default=0)
+    category = db.Column(db.String(100), default="Other")
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 class Goal(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.String(100), nullable=False)
+    target = db.Column(db.Float, default=0)
+    saved = db.Column(db.Float, default=0)
 
-    id = db.Column(
-        db.Integer,
-        primary_key=True
-    )
-
-    user = db.Column(
-        db.String(100),
-        nullable=False
-    )
-
-    target = db.Column(
-        db.Float,
-        default=0
-    )
-
-    saved = db.Column(
-        db.Float,
-        default=0
-    )
-
-
-# =========================================================
-# DATABASE INITIALIZATION
-# =========================================================
 
 with app.app_context():
     db.create_all()
 
 
-# =========================================================
-# HOME PAGE
-# =========================================================
+# =========================
+# HOME
+# =========================
 
 @app.route("/")
 def home():
-
-    # Show the professional landing page
     return render_template("index.html")
 
 
-# =========================================================
-# ABOUT
-# =========================================================
-
 @app.route("/about")
 def about():
-
     return render_template("about.html")
 
 
-# =========================================================
-# CONTACT
-# =========================================================
-
 @app.route("/contact")
 def contact():
-
     return render_template("contact.html")
 
 
-# =========================================================
+# =========================
 # REGISTER
-# =========================================================
+# =========================
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
     if request.method == "POST":
 
-        # -----------------------------
-        # Get form data
-        # -----------------------------
+        full_name = request.form.get("full_name", "").strip()
+        email = request.form.get("email", "").strip().lower()
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "")
+        confirm_password = request.form.get("confirm_password", "")
+        monthly_income = request.form.get("monthly_income", 0)
+        financial_goal = request.form.get("financial_goal", "").strip()
 
-        full_name = request.form.get(
-            "full_name",
-            ""
-        ).strip()
-
-        email = request.form.get(
-            "email",
-            ""
-        ).strip().lower()
-
-        username = request.form.get(
-            "username",
-            ""
-        ).strip()
-
-        password = request.form.get(
-            "password",
-            ""
-        )
-
-        confirm_password = request.form.get(
-            "confirm_password",
-            ""
-        )
-
-        monthly_income = request.form.get(
-            "monthly_income",
-            "0"
-        )
-
-        financial_goal = request.form.get(
-            "financial_goal",
-            ""
-        ).strip()
-
-
-        # -----------------------------
-        # Required fields
-        # -----------------------------
-
-        if not full_name:
-            flash(
-                "Please enter your name.",
-                "danger"
-            )
+        if not full_name or not email or not username or not password:
+            flash("Please fill all required fields.", "info")
             return redirect("/register")
 
-
-        if not email:
-            flash(
-                "Please enter your email address.",
-                "danger"
-            )
-            return redirect("/register")
-
-
-        if not username:
-            flash(
-                "Please choose a username.",
-                "danger"
-            )
-            return redirect("/register")
-
-
-        if not password:
-            flash(
-                "Please create a password.",
-                "danger"
-            )
-            return redirect("/register")
-
-
-        # -----------------------------
-        # Password validation
-        # -----------------------------
         if password != confirm_password:
             flash("Passwords do not match.", "info")
             return redirect("/register")
-        
+
         if len(password) < 8:
-            flash("For better account security, please use at least 8 characters.", "info")
+            flash(
+                "For better account security, please use at least 8 characters.",
+                "info"
+            )
             return redirect("/register")
-              
-
-
-        # -----------------------------
-        # Income validation
-        # -----------------------------
 
         try:
-
-            monthly_income = float(
-                monthly_income or 0
-            )
+            monthly_income = float(monthly_income or 0)
 
             if monthly_income < 0:
                 raise ValueError
 
         except ValueError:
-
-            flash(
-                "Please enter a valid monthly income.",
-                "danger"
-            )
-
+            flash("Please enter a valid monthly income.", "info")
             return redirect("/register")
 
-
-        # -----------------------------
-        # Duplicate username
-        # -----------------------------
-
-        existing_username = User.query.filter_by(
-            username=username
-        ).first()
-
-        if existing_username:
-
-            flash(
-                "Username already exists. Please choose another.",
-                "danger"
-            )
-
+        if User.query.filter_by(username=username).first():
+            flash("Username already exists. Please choose another.", "info")
             return redirect("/register")
 
-
-        # -----------------------------
-        # Duplicate email
-        # -----------------------------
-
-        existing_email = User.query.filter_by(
-            email=email
-        ).first()
-
-        if existing_email:
-
-            flash(
-                "This email is already registered. Please login.",
-                "danger"
-            )
-
+        if User.query.filter_by(email=email).first():
+            flash("Email already registered. Please login.", "info")
             return redirect("/register")
 
-
-        # -----------------------------
-        # Password hashing
-        # -----------------------------
-
-        hashed_password = bcrypt.generate_password_hash(
-            password
-        ).decode("utf-8")
-
-
-        # -----------------------------
-        # Create user
-        # -----------------------------
+        hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
 
         user = User(
-
             full_name=full_name,
-
             email=email,
-
             username=username,
-
             password=hashed_password,
-
             monthly_income=monthly_income,
-
             financial_goal=financial_goal
         )
 
-
         try:
-
             db.session.add(user)
-
             db.session.commit()
 
-            flash(
-                "Account created successfully! Please login.",
-                "success"
-            )
-
+            flash("Account created successfully! Please login.", "success")
             return redirect("/login")
 
-
         except IntegrityError:
-
             db.session.rollback()
-
-            flash(
-                "Username or email already exists.",
-                "danger"
-            )
-
+            flash("Username or email already exists.", "info")
             return redirect("/register")
 
-
-    return render_template(
-        "register.html"
-    )
+    return render_template("register.html")
 
 
-# =========================================================
+# =========================
 # LOGIN
-# =========================================================
+# =========================
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
     if request.method == "POST":
 
-        username = request.form.get(
-            "username",
-            ""
-        ).strip()
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "")
 
-        password = request.form.get(
-            "password",
-            ""
-        )
+        user = User.query.filter_by(username=username).first()
 
-
-        user = User.query.filter_by(
-            username=username
-        ).first()
-
-
-        if user and bcrypt.check_password_hash(
-            user.password,
-            password
-        ):
+        if user and bcrypt.check_password_hash(user.password, password):
 
             session["user"] = user.username
 
             return redirect("/dashboard")
 
+        flash("Invalid username or password.", "info")
 
-        flash(
-            "Invalid username or password.",
-            "danger"
-        )
+    return render_template("login.html")
 
 
-    return render_template(
-        "login.html"
-    )
-
-
-# =========================================================
+# =========================
 # DASHBOARD
-# =========================================================
+# =========================
 
 @app.route("/dashboard")
 def dashboard():
 
     if "user" not in session:
-
         return redirect("/login")
-
 
     username = session["user"]
 
-
-    user = User.query.filter_by(
-        username=username
-    ).first()
-
-
-    if not user:
-
-        session.pop("user", None)
-
-        return redirect("/login")
-
-
-    # -----------------------------
-    # Finance records
-    # -----------------------------
+    user = User.query.filter_by(username=username).first()
 
     data = Finance.query.filter_by(
         user=username
+    ).order_by(
+        Finance.created_at.desc()
     ).all()
 
+    goal = Goal.query.filter_by(user=username).first()
 
-    # -----------------------------
-    # Savings goal
-    # -----------------------------
+    total_income = sum((d.income or 0) for d in data)
+    total_expense = sum((d.expense or 0) for d in data)
 
-    goal = Goal.query.filter_by(
-        user=username
-    ).first()
+    savings = total_income - total_expense
 
+    # -------------------------
+    # Saving Rate
+    # -------------------------
 
-    # -----------------------------
-    # Chart data
-    # -----------------------------
+    if total_income > 0:
+        saving_rate = round((savings / total_income) * 100, 1)
+    else:
+        saving_rate = 0
 
-    income_list = [
-        record.income or 0
-        for record in data
-    ]
+    # -------------------------
+    # Financial Health Score
+    # -------------------------
 
+    if total_income <= 0:
+        health_score = 0
+    else:
+        score = 50
 
-    expense_list = [
-        record.expense or 0
-        for record in data
-    ]
+        if saving_rate >= 20:
+            score += 25
+        elif saving_rate >= 10:
+            score += 15
+        elif saving_rate > 0:
+            score += 5
 
+        expense_ratio = (total_expense / total_income) * 100
 
-    # -----------------------------
-    # Totals
-    # -----------------------------
+        if expense_ratio <= 70:
+            score += 15
+        elif expense_ratio <= 85:
+            score += 8
 
-    total_income = sum(
-        income_list
-    )
+        if goal and goal.target > 0:
+            progress = min((goal.saved / goal.target) * 100, 100)
+            if progress >= 50:
+                score += 10
+            elif progress > 0:
+                score += 5
 
+        health_score = min(score, 100)
 
-    total_expense = sum(
-        expense_list
-    )
+    # -------------------------
+    # Health Status
+    # -------------------------
 
+    if health_score >= 80:
+        health_status = "Excellent"
+    elif health_score >= 60:
+        health_status = "Healthy"
+    elif health_score >= 40:
+        health_status = "Needs Attention"
+    else:
+        health_status = "Getting Started"
 
-    savings = (
-        total_income -
-        total_expense
-    )
-
-
-    # -----------------------------
-    # User profile
-    # -----------------------------
-
-    full_name = user.full_name
-
-    monthly_income = (
-        user.monthly_income or 0
-    )
-
-    financial_goal = (
-        user.financial_goal or ""
-    )
-
-
-    # =====================================================
-    # SMART FINANCIAL ADVICE
-    # =====================================================
+    # -------------------------
+    # Smart Advice
+    # -------------------------
 
     if total_income == 0:
-
         advice = (
-            "Start by adding your income and expenses "
-            "to receive personalized financial insights."
+            "Start by adding your income and expenses. "
+            "Smart-Fin will analyze your financial habits and provide insights."
+        )
+
+    elif savings <= 0:
+        advice = (
+            "Your current expenses are higher than your income. "
+            "Review non-essential spending and create a realistic monthly budget."
+        )
+
+    elif saving_rate < 10:
+        advice = (
+            "Your savings rate is currently below 10%. "
+            "Try reducing unnecessary spending and gradually increase your savings."
+        )
+
+    elif saving_rate < 20:
+        advice = (
+            "You're saving money, which is a positive start. "
+            "Try moving toward a 20% savings rate for stronger financial stability."
         )
 
     else:
+        advice = (
+            f"Great progress! You're saving around {saving_rate}% of your recorded income. "
+            "Keep maintaining this habit and continue building your financial safety net."
+        )
 
-        saving_rate = (
-            savings / total_income
-        ) * 100
+    # -------------------------
+    # Goal Analysis
+    # -------------------------
 
+    goal_remaining = 0
+    goal_progress = 0
+    estimated_months = 0
 
-        if savings < 0:
+    if goal and goal.target > 0:
 
-            advice = (
-                "Your expenses are currently higher than "
-                "your income. Review non-essential spending "
-                "and focus on bringing your monthly balance "
-                "back into the positive."
+        goal_remaining = max(goal.target - goal.saved, 0)
+
+        goal_progress = min(
+            round((goal.saved / goal.target) * 100, 1),
+            100
+        )
+
+        if savings > 0 and goal_remaining > 0:
+            estimated_months = max(
+                1,
+                round(goal_remaining / savings)
             )
 
-        elif saving_rate >= 30:
+    # -------------------------
+    # Monthly Recommendation
+    # -------------------------
 
-            advice = (
-                "Excellent! You are maintaining a strong "
-                "savings rate. Keep building your financial "
-                "safety net and continue working towards "
-                "your financial goals."
-            )
+    if monthly_income := (user.monthly_income if user else 0):
+        recommended_saving = round(monthly_income * 0.20, 2)
+    else:
+        recommended_saving = 0
 
-        elif saving_rate >= 20:
+    # -------------------------
+    # Chart Data
+    # -------------------------
 
-            advice = (
-                "Great job! You are maintaining a healthy "
-                "savings rate. Keep tracking your expenses "
-                "and stay consistent with your savings."
-            )
+    recent_data = list(reversed(data[:7]))
 
-        elif saving_rate > 0:
+    chart_labels = [
+        d.created_at.strftime("%d %b")
+        for d in recent_data
+    ]
 
-            advice = (
-                "You are saving money, which is a good start. "
-                "Try reducing unnecessary expenses and gradually "
-                "increase your savings rate towards 20%."
-            )
+    income_list = [
+        d.income or 0
+        for d in recent_data
+    ]
 
-        else:
+    expense_list = [
+        d.expense or 0
+        for d in recent_data
+    ]
 
-            advice = (
-                "Your current income and expenses are balanced. "
-                "Consider setting a monthly savings target to "
-                "build stronger financial security."
-            )
+    # -------------------------
+    # Recent Transactions
+    # -------------------------
 
+    recent_transactions = data[:6]
 
-    # =====================================================
-    # RENDER DASHBOARD
-    # =====================================================
+    full_name = user.full_name if user else username
+    financial_goal = user.financial_goal if user else ""
 
     return render_template(
-
         "dashboard.html",
 
         user=username,
-
         full_name=full_name,
 
         monthly_income=monthly_income,
-
         financial_goal=financial_goal,
 
         data=data,
-
-        income_list=income_list,
-
-        expense_list=expense_list,
+        recent_transactions=recent_transactions,
 
         total_income=total_income,
-
         total_expense=total_expense,
-
         savings=savings,
+        saving_rate=saving_rate,
+
+        health_score=health_score,
+        health_status=health_status,
+
+        advice=advice,
 
         goal=goal,
+        goal_remaining=goal_remaining,
+        goal_progress=goal_progress,
+        estimated_months=estimated_months,
 
-        advice=advice
+        recommended_saving=recommended_saving,
+
+        chart_labels=chart_labels,
+        income_list=income_list,
+        expense_list=expense_list
     )
 
 
-# =========================================================
+# =========================
 # ADD FINANCIAL RECORD
-# =========================================================
+# =========================
 
 @app.route("/add", methods=["POST"])
 def add():
 
     if "user" not in session:
-
         return redirect("/login")
-
 
     try:
 
-        income = float(
-            request.form.get(
-                "income",
-                0
-            ) or 0
-        )
+        income = float(request.form.get("income", 0) or 0)
+        expense = float(request.form.get("expense", 0) or 0)
 
-
-        expense = float(
-            request.form.get(
-                "expense",
-                0
-            ) or 0
-        )
-
-
-        # -----------------------------
-        # Validation
-        # -----------------------------
+        category = request.form.get(
+            "category",
+            "Other"
+        ).strip()
 
         if income < 0 or expense < 0:
-
             flash(
                 "Income and expense cannot be negative.",
-                "danger"
+                "info"
             )
-
             return redirect("/dashboard")
-
 
         if income == 0 and expense == 0:
-
             flash(
                 "Please enter an income or expense amount.",
-                "warning"
+                "info"
             )
-
             return redirect("/dashboard")
 
-
-        # -----------------------------
-        # Create record
-        # -----------------------------
-
         record = Finance(
-
             user=session["user"],
-
             income=income,
-
-            expense=expense
+            expense=expense,
+            category=category or "Other"
         )
 
-
         db.session.add(record)
-
-
-        # -----------------------------
-        # Update goal savings
-        # -----------------------------
 
         goal = Goal.query.filter_by(
             user=session["user"]
         ).first()
 
-
         if goal:
 
-            goal.saved += (
-                income - expense
-            )
-
+            goal.saved += income - expense
 
             if goal.saved < 0:
-
                 goal.saved = 0
 
-
         db.session.commit()
-
 
         flash(
             "Financial record added successfully!",
             "success"
         )
 
-
     except ValueError:
 
         flash(
             "Please enter valid numbers.",
-            "danger"
+            "info"
         )
-
-
-    except Exception:
-
-        db.session.rollback()
-
-        flash(
-            "Something went wrong while saving your record.",
-            "danger"
-        )
-
 
     return redirect("/dashboard")
 
 
-# =========================================================
-# SET SAVINGS GOAL
-# =========================================================
+# =========================
+# SET GOAL
+# =========================
 
 @app.route("/set_goal", methods=["POST"])
 def set_goal():
 
     if "user" not in session:
-
         return redirect("/login")
-
 
     try:
 
         target = float(
-            request.form.get(
-                "target",
-                0
-            )
+            request.form.get("target", 0)
         )
 
-
         if target <= 0:
-
             flash(
                 "Please enter a valid savings goal.",
-                "danger"
+                "info"
             )
-
             return redirect("/dashboard")
-
 
         goal = Goal.query.filter_by(
             user=session["user"]
         ).first()
-
 
         if goal:
 
@@ -772,68 +490,45 @@ def set_goal():
         else:
 
             goal = Goal(
-
                 user=session["user"],
-
                 target=target,
-
                 saved=0
             )
 
             db.session.add(goal)
 
-
         db.session.commit()
-
 
         flash(
             "Savings goal updated successfully!",
             "success"
         )
 
-
     except ValueError:
 
         flash(
             "Please enter a valid amount.",
-            "danger"
+            "info"
         )
-
-
-    except Exception:
-
-        db.session.rollback()
-
-        flash(
-            "Unable to update your savings goal.",
-            "danger"
-        )
-
 
     return redirect("/dashboard")
 
 
-# =========================================================
+# =========================
 # LOGOUT
-# =========================================================
+# =========================
 
 @app.route("/logout")
 def logout():
 
-    session.pop(
-        "user",
-        None
-    )
+    session.pop("user", None)
 
     return redirect("/")
 
 
-# =========================================================
-# LOCAL DEVELOPMENT
-# =========================================================
+# =========================
+# RUN
+# =========================
 
 if __name__ == "__main__":
-
-    app.run(
-        debug=True
-    )
+    app.run(debug=True)
