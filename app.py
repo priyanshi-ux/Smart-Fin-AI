@@ -115,14 +115,22 @@ def register():
             return redirect("/register")
 
         if User.query.filter_by(username=username).first():
-            flash("Username already exists. Please choose another.", "info")
+            flash(
+                "Username already exists. Please choose another.",
+                "info"
+            )
             return redirect("/register")
 
         if User.query.filter_by(email=email).first():
-            flash("Email already registered. Please login.", "info")
+            flash(
+                "Email already registered. Please login.",
+                "info"
+            )
             return redirect("/register")
 
-        hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
+        hashed_password = bcrypt.generate_password_hash(
+            password
+        ).decode("utf-8")
 
         user = User(
             full_name=full_name,
@@ -137,12 +145,19 @@ def register():
             db.session.add(user)
             db.session.commit()
 
-            flash("Account created successfully! Please login.", "success")
+            flash(
+                "Account created successfully! Please login.",
+                "success"
+            )
             return redirect("/login")
 
         except IntegrityError:
             db.session.rollback()
-            flash("Username or email already exists.", "info")
+
+            flash(
+                "Username or email already exists.",
+                "info"
+            )
             return redirect("/register")
 
     return render_template("register.html")
@@ -160,15 +175,23 @@ def login():
         username = request.form.get("username", "").strip()
         password = request.form.get("password", "")
 
-        user = User.query.filter_by(username=username).first()
+        user = User.query.filter_by(
+            username=username
+        ).first()
 
-        if user and bcrypt.check_password_hash(user.password, password):
+        if user and bcrypt.check_password_hash(
+            user.password,
+            password
+        ):
 
             session["user"] = user.username
 
             return redirect("/dashboard")
 
-        flash("Invalid username or password.", "info")
+        flash(
+            "Invalid username or password.",
+            "info"
+        )
 
     return render_template("login.html")
 
@@ -185,7 +208,9 @@ def dashboard():
 
     username = session["user"]
 
-    user = User.query.filter_by(username=username).first()
+    user = User.query.filter_by(
+        username=username
+    ).first()
 
     data = Finance.query.filter_by(
         user=username
@@ -193,104 +218,177 @@ def dashboard():
         Finance.created_at.desc()
     ).all()
 
-    goal = Goal.query.filter_by(user=username).first()
+    goal = Goal.query.filter_by(
+        user=username
+    ).first()
 
-    total_income = sum((d.income or 0) for d in data)
-    total_expense = sum((d.expense or 0) for d in data)
+    # =========================
+    # TOTALS
+    # =========================
 
-    savings = total_income - total_expense
+    total_income = round(
+        sum((d.income or 0) for d in data),
+        2
+    )
 
-    # -------------------------
-    # Saving Rate
-    # -------------------------
+    total_expense = round(
+        sum((d.expense or 0) for d in data),
+        2
+    )
+
+    savings = round(
+        total_income - total_expense,
+        2
+    )
+
+    # =========================
+    # SAVING RATE
+    # =========================
 
     if total_income > 0:
-        saving_rate = round((savings / total_income) * 100, 1)
-    else:
-        saving_rate = 0
 
-    # -------------------------
-    # Financial Health Score
-    # -------------------------
+        saving_rate = round(
+            (savings / total_income) * 100,
+            1
+        )
+
+        # Never display a negative saving rate
+        # as a positive-looking financial metric.
+        saving_rate_display = max(
+            saving_rate,
+            0
+        )
+
+    else:
+
+        saving_rate = 0
+        saving_rate_display = 0
+
+    # =========================
+    # EXPENSE RATIO
+    # =========================
+
+    if total_income > 0:
+        expense_ratio = (
+            total_expense / total_income
+        ) * 100
+    else:
+        expense_ratio = 0
+
+    # =========================
+    # FINANCIAL HEALTH SCORE
+    # =========================
 
     if total_income <= 0:
+
         health_score = 0
+
+    elif savings <= 0:
+
+        # Expenses are equal to or greater than income.
+        health_score = 25
+
     else:
+
         score = 50
 
         if saving_rate >= 20:
             score += 25
+
         elif saving_rate >= 10:
             score += 15
+
         elif saving_rate > 0:
             score += 5
 
-        expense_ratio = (total_expense / total_income) * 100
-
         if expense_ratio <= 70:
             score += 15
+
         elif expense_ratio <= 85:
             score += 8
 
         if goal and goal.target > 0:
-            progress = min((goal.saved / goal.target) * 100, 100)
-            if progress >= 50:
+
+            goal_progress_for_score = min(
+                (goal.saved / goal.target) * 100,
+                100
+            )
+
+            if goal_progress_for_score >= 50:
                 score += 10
-            elif progress > 0:
+
+            elif goal_progress_for_score > 0:
                 score += 5
 
-        health_score = min(score, 100)
+        health_score = min(
+            round(score),
+            100
+        )
 
-    # -------------------------
-    # Health Status
-    # -------------------------
+    # =========================
+    # HEALTH STATUS
+    # =========================
 
     if health_score >= 80:
         health_status = "Excellent"
+
     elif health_score >= 60:
         health_status = "Healthy"
+
     elif health_score >= 40:
         health_status = "Needs Attention"
+
     else:
         health_status = "Getting Started"
 
-    # -------------------------
-    # Smart Advice
-    # -------------------------
+    # =========================
+    # SMART ADVICE
+    # =========================
 
     if total_income == 0:
+
         advice = (
             "Start by adding your income and expenses. "
-            "Smart-Fin will analyze your financial habits and provide insights."
+            "Smart-Fin will analyze your financial habits "
+            "and provide personalized insights."
         )
 
     elif savings <= 0:
+
         advice = (
-            "Your current expenses are higher than your income. "
-            "Review non-essential spending and create a realistic monthly budget."
+            "Your expenses are currently equal to or higher "
+            "than your income. Review non-essential spending "
+            "and create a realistic monthly budget."
         )
 
     elif saving_rate < 10:
+
         advice = (
             "Your savings rate is currently below 10%. "
-            "Try reducing unnecessary spending and gradually increase your savings."
+            "Try reducing unnecessary spending and gradually "
+            "increase the amount you save each month."
         )
 
     elif saving_rate < 20:
+
         advice = (
             "You're saving money, which is a positive start. "
-            "Try moving toward a 20% savings rate for stronger financial stability."
+            "Try moving toward a 20% savings rate for stronger "
+            "financial stability."
         )
 
     else:
+
         advice = (
-            f"Great progress! You're saving around {saving_rate}% of your recorded income. "
-            "Keep maintaining this habit and continue building your financial safety net."
+            f"Great progress! You're saving around "
+            f"{saving_rate_display}% of your recorded income. "
+            "Keep maintaining this habit and continue building "
+            "your financial safety net."
         )
 
-    # -------------------------
-    # Goal Analysis
-    # -------------------------
+    # =========================
+    # GOAL ANALYSIS
+    # =========================
 
     goal_remaining = 0
     goal_progress = 0
@@ -298,57 +396,97 @@ def dashboard():
 
     if goal and goal.target > 0:
 
-        goal_remaining = max(goal.target - goal.saved, 0)
+        goal_saved = max(
+            goal.saved or 0,
+            0
+        )
+
+        goal_remaining = max(
+            goal.target - goal_saved,
+            0
+        )
 
         goal_progress = min(
-            round((goal.saved / goal.target) * 100, 1),
+            round(
+                (goal_saved / goal.target) * 100,
+                1
+            ),
             100
         )
 
+        # Estimate based on current positive monthly savings.
         if savings > 0 and goal_remaining > 0:
+
             estimated_months = max(
                 1,
-                round(goal_remaining / savings)
+                round(
+                    goal_remaining / savings
+                )
             )
 
-    # -------------------------
-    # Monthly Recommendation
-    # -------------------------
+    # =========================
+    # MONTHLY RECOMMENDATION
+    # =========================
 
-    if monthly_income := (user.monthly_income if user else 0):
-        recommended_saving = round(monthly_income * 0.20, 2)
+    monthly_income = (
+        user.monthly_income
+        if user
+        else 0
+    )
+
+    if monthly_income and monthly_income > 0:
+
+        recommended_saving = round(
+            monthly_income * 0.20,
+            2
+        )
+
     else:
+
         recommended_saving = 0
 
-    # -------------------------
-    # Chart Data
-    # -------------------------
+    # =========================
+    # CHART DATA
+    # =========================
 
-    recent_data = list(reversed(data[:7]))
+    recent_data = list(
+        reversed(data[:7])
+    )
 
     chart_labels = [
         d.created_at.strftime("%d %b")
+        if d.created_at
+        else ""
         for d in recent_data
     ]
 
     income_list = [
-        d.income or 0
+        round(d.income or 0, 2)
         for d in recent_data
     ]
 
     expense_list = [
-        d.expense or 0
+        round(d.expense or 0, 2)
         for d in recent_data
     ]
 
-    # -------------------------
-    # Recent Transactions
-    # -------------------------
+    # =========================
+    # RECENT TRANSACTIONS
+    # =========================
 
     recent_transactions = data[:6]
 
-    full_name = user.full_name if user else username
-    financial_goal = user.financial_goal if user else ""
+    full_name = (
+        user.full_name
+        if user
+        else username
+    )
+
+    financial_goal = (
+        user.financial_goal
+        if user
+        else ""
+    )
 
     return render_template(
         "dashboard.html",
@@ -365,7 +503,8 @@ def dashboard():
         total_income=total_income,
         total_expense=total_expense,
         savings=savings,
-        saving_rate=saving_rate,
+
+        saving_rate=saving_rate_display,
 
         health_score=health_score,
         health_status=health_status,
@@ -395,50 +534,200 @@ def add():
     if "user" not in session:
         return redirect("/login")
 
-    try:
+    # -------------------------
+    # Get transaction type
+    # -------------------------
 
-        income = float(request.form.get("income", 0) or 0)
-        expense = float(request.form.get("expense", 0) or 0)
+    transaction_type = request.form.get(
+        "transaction_type",
+        ""
+    ).strip().lower()
 
-        category = request.form.get(
-            "category",
-            "Other"
-        ).strip()
+    category = request.form.get(
+        "category",
+        "Other"
+    ).strip()
 
-        if income < 0 or expense < 0:
-            flash(
-                "Income and expense cannot be negative.",
-                "info"
-            )
-            return redirect("/dashboard")
+    # -------------------------
+    # Validate transaction type
+    # -------------------------
 
-        if income == 0 and expense == 0:
-            flash(
-                "Please enter an income or expense amount.",
-                "info"
-            )
-            return redirect("/dashboard")
+    if transaction_type not in [
+        "income",
+        "expense"
+    ]:
 
-        record = Finance(
-            user=session["user"],
-            income=income,
-            expense=expense,
-            category=category or "Other"
+        flash(
+            "Please select Income or Expense.",
+            "info"
         )
 
+        return redirect("/dashboard")
+
+    # -------------------------
+    # Get amount
+    # -------------------------
+
+    amount_raw = request.form.get(
+        "amount",
+        ""
+    ).strip()
+
+    # -------------------------
+    # Backward compatibility
+    #
+    # If old dashboard form is still
+    # being used, support it temporarily.
+    # -------------------------
+
+    if not amount_raw:
+
+        try:
+
+            old_income = float(
+                request.form.get(
+                    "income",
+                    0
+                ) or 0
+            )
+
+            old_expense = float(
+                request.form.get(
+                    "expense",
+                    0
+                ) or 0
+            )
+
+        except ValueError:
+
+            flash(
+                "Please enter a valid amount.",
+                "info"
+            )
+
+            return redirect("/dashboard")
+
+        # Old form must never allow both.
+
+        if old_income > 0 and old_expense > 0:
+
+            flash(
+                "Please add Income and Expense as separate transactions.",
+                "info"
+            )
+
+            return redirect("/dashboard")
+
+        if old_income > 0:
+
+            transaction_type = "income"
+            amount = old_income
+
+        elif old_expense > 0:
+
+            transaction_type = "expense"
+            amount = old_expense
+
+        else:
+
+            flash(
+                "Please enter an amount.",
+                "info"
+            )
+
+            return redirect("/dashboard")
+
+    else:
+
+        try:
+
+            amount = float(amount_raw)
+
+        except ValueError:
+
+            flash(
+                "Please enter a valid amount.",
+                "info"
+            )
+
+            return redirect("/dashboard")
+
+    # -------------------------
+    # Amount validation
+    # -------------------------
+
+    if amount <= 0:
+
+        flash(
+            "Amount must be greater than ₹0.",
+            "info"
+        )
+
+        return redirect("/dashboard")
+
+    # Prevent extremely unrealistic accidental input.
+    if amount > 100000000:
+
+        flash(
+            "Please enter a realistic transaction amount.",
+            "info"
+        )
+
+        return redirect("/dashboard")
+
+    # -------------------------
+    # Category validation
+    # -------------------------
+
+    allowed_categories = {
+        "Food",
+        "Transport",
+        "Shopping",
+        "Bills",
+        "Education",
+        "Entertainment",
+        "Healthcare",
+        "Other"
+    }
+
+    if category not in allowed_categories:
+
+        category = "Other"
+
+    # -------------------------
+    # IMPORTANT:
+    # One record = ONE transaction.
+    #
+    # Income record:
+    # income = amount
+    # expense = 0
+    #
+    # Expense record:
+    # income = 0
+    # expense = amount
+    # -------------------------
+
+    if transaction_type == "income":
+
+        income = amount
+        expense = 0
+
+    else:
+
+        income = 0
+        expense = amount
+
+    record = Finance(
+        user=session["user"],
+        income=income,
+        expense=expense,
+        category=category,
+        created_at=datetime.utcnow()
+    )
+
+    try:
+
         db.session.add(record)
-
-        goal = Goal.query.filter_by(
-            user=session["user"]
-        ).first()
-
-        if goal:
-
-            goal.saved += income - expense
-
-            if goal.saved < 0:
-                goal.saved = 0
-
         db.session.commit()
 
         flash(
@@ -446,10 +735,12 @@ def add():
             "success"
         )
 
-    except ValueError:
+    except Exception:
+
+        db.session.rollback()
 
         flash(
-            "Please enter valid numbers.",
+            "Unable to save the financial record. Please try again.",
             "info"
         )
 
@@ -469,14 +760,28 @@ def set_goal():
     try:
 
         target = float(
-            request.form.get("target", 0)
+            request.form.get(
+                "target",
+                0
+            )
         )
 
         if target <= 0:
+
             flash(
                 "Please enter a valid savings goal.",
                 "info"
             )
+
+            return redirect("/dashboard")
+
+        if target > 100000000:
+
+            flash(
+                "Please enter a realistic savings goal.",
+                "info"
+            )
+
             return redirect("/dashboard")
 
         goal = Goal.query.filter_by(
@@ -513,7 +818,48 @@ def set_goal():
 
     return redirect("/dashboard")
 
+# =========================
+# DELETE TRANSACTION
+# =========================
 
+@app.route("/delete_transaction/<int:transaction_id>", methods=["POST"])
+def delete_transaction(transaction_id):
+
+    if "user" not in session:
+        return redirect("/login")
+
+    transaction = Finance.query.filter_by(
+        id=transaction_id,
+        user=session["user"]
+    ).first()
+
+    if not transaction:
+        flash(
+            "Transaction not found.",
+            "info"
+        )
+        return redirect("/dashboard")
+
+    try:
+
+        db.session.delete(transaction)
+        db.session.commit()
+
+        flash(
+            "Transaction deleted successfully!",
+            "success"
+        )
+
+    except Exception:
+
+        db.session.rollback()
+
+        flash(
+            "Unable to delete transaction. Please try again.",
+            "info"
+        )
+
+    return redirect("/dashboard")
 # =========================
 # LOGOUT
 # =========================
@@ -521,7 +867,10 @@ def set_goal():
 @app.route("/logout")
 def logout():
 
-    session.pop("user", None)
+    session.pop(
+        "user",
+        None
+    )
 
     return redirect("/")
 

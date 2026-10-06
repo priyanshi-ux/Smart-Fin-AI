@@ -2,544 +2,430 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
     <title>Smart-Fin AI | Dashboard</title>
+
+
+    <!-- Bootstrap -->
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet">
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Chart.js -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/chart.js">
+    </script>
+
 
     <style>
 
         body {
+
             background: #f6f8fc;
+
             font-family: Arial, sans-serif;
+
             color: #1f2937;
+
         }
+
 
         .navbar {
+
             background: white;
-            border-bottom: 1px solid #e9edf5;
+
+            border-bottom:
+                1px solid #e9edf5;
+
         }
+
 
         .brand {
+
             font-weight: 700;
+
             font-size: 21px;
+
         }
+
 
         .hero {
-            background: linear-gradient(135deg, #111827, #374151);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #111827,
+                    #374151
+                );
+
             color: white;
+
             border-radius: 20px;
+
             padding: 30px;
+
             margin-top: 25px;
+
         }
+
 
         .card {
+
             border: none;
+
             border-radius: 18px;
-            box-shadow: 0 5px 20px rgba(0,0,0,.05);
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,.05);
+
         }
+
 
         .stat-card {
+
             padding: 22px;
+
             height: 100%;
+
         }
+
 
         .stat-title {
+
             color: #6b7280;
+
             font-size: 14px;
+
         }
+
 
         .stat-value {
+
             font-size: 27px;
+
             font-weight: 700;
+
             margin-top: 7px;
+
         }
+
 
         .score {
+
             font-size: 42px;
+
             font-weight: 800;
+
         }
+
 
         .insight {
+
             background: #f0f7ff;
-            border-left: 5px solid #2563eb;
+
+            border-left:
+                5px solid #2563eb;
+
             padding: 20px;
+
             border-radius: 12px;
+
         }
 
+
         .section-title {
+
             font-weight: 700;
+
         }
+
 
         .form-control,
         .form-select {
+
             border-radius: 10px;
+
             padding: 11px;
+
         }
+
 
         .btn {
+
             border-radius: 10px;
+
         }
+
 
         .progress {
+
             height: 12px;
+
             border-radius: 20px;
+
         }
+
 
         .transaction {
-            padding: 13px 0;
-            border-bottom: 1px solid #edf0f5;
+
+            padding: 15px 0;
+
+            border-bottom:
+                1px solid #edf0f5;
+
         }
+
 
         .transaction:last-child {
+
             border-bottom: none;
+
         }
 
+
+        .chart-container {
+
+            position: relative;
+
+            height: 330px;
+
+        }
+
+
         footer {
+
             color: #6b7280;
+
             padding: 30px 0;
+
+        }
+
+
+        @media (max-width: 768px) {
+
+            .hero {
+
+                padding: 22px;
+
+            }
+
+
+            .stat-value {
+
+                font-size: 23px;
+
+            }
+
+
+            .chart-container {
+
+                height: 260px;
+
+            }
+
         }
 
     </style>
+
 </head>
+
 
 <body>
 
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
 <nav class="navbar navbar-expand-lg">
+
     <div class="container">
 
-        <a class="navbar-brand brand" href="/">
+        <a
+            class="navbar-brand brand"
+            href="/">
+
             💰 Smart-Fin AI
+
         </a>
+
 
         <div class="d-flex align-items-center gap-3">
 
-            <span class="text-muted d-none d-md-block">
+            <span
+                class="text-muted d-none d-md-block">
+
                 Welcome, {{ full_name }}
+
             </span>
 
-            <a href="/logout" class="btn btn-outline-dark btn-sm">
+
+            <a
+                href="/logout"
+                class="btn btn-outline-dark btn-sm">
+
                 Logout
+
             </a>
 
         </div>
 
     </div>
+
 </nav>
 
 
 <div class="container pb-5">
 
-    <!-- HERO -->
 
-    <div class="hero">
+<!-- =====================================================
+     FLASH MESSAGES
+===================================================== -->
 
-        <h2 class="fw-bold">
-            Welcome back, {{ full_name }} 👋
-        </h2>
+{% with messages = get_flashed_messages(
+    with_categories=true
+) %}
 
-        <p class="mb-0 opacity-75">
-            Your personal financial overview and smart insights are ready.
-        </p>
+    {% if messages %}
 
-    </div>
+        <div class="mt-4">
 
+            {% for category, message in messages %}
 
-    <!-- STAT CARDS -->
-
-    <div class="row g-4 mt-1">
-
-        <div class="col-md-4">
-            <div class="card stat-card">
-
-                <div class="stat-title">
-                    Total Income
-                </div>
-
-                <div class="stat-value">
-                    ₹{{ "%.2f"|format(total_income) }}
-                </div>
-
-            </div>
-        </div>
-
-
-        <div class="col-md-4">
-            <div class="card stat-card">
-
-                <div class="stat-title">
-                    Total Expense
-                </div>
-
-                <div class="stat-value">
-                    ₹{{ "%.2f"|format(total_expense) }}
-                </div>
-
-            </div>
-        </div>
-
-
-        <div class="col-md-4">
-            <div class="card stat-card">
-
-                <div class="stat-title">
-                    Current Savings
-                </div>
-
-                <div class="stat-value">
-                    ₹{{ "%.2f"|format(savings) }}
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-
-
-    <!-- FINANCIAL HEALTH -->
-
-    <div class="row g-4 mt-1">
-
-        <div class="col-md-5">
-
-            <div class="card p-4 h-100">
-
-                <h5 class="section-title">
-                    📊 Financial Health
-                </h5>
-
-                <div class="text-center mt-3">
-
-                    <div class="score">
-                        {{ health_score }}/100
-                    </div>
-
-                    <div class="text-muted">
-                        {{ health_status }}
-                    </div>
-
-                </div>
-
-                <hr>
-
-                <div class="d-flex justify-content-between">
-                    <span>Saving Rate</span>
-                    <strong>{{ saving_rate }}%</strong>
-                </div>
-
-                <div class="progress mt-2">
-
-                    <div
-                        class="progress-bar"
-                        style="width: {{ [saving_rate, 100]|min }}%">
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="col-md-7">
-
-            <div class="card p-4 h-100">
-
-                <h5 class="section-title">
-                    🧠 Smart Financial Insight
-                </h5>
-
-                <div class="insight mt-3">
-                    {{ advice }}
-                </div>
-
-                <div class="mt-3 text-muted">
-                    Recommended monthly saving:
-                    <strong>
-                        ₹{{ "%.2f"|format(recommended_saving) }}
-                    </strong>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- ADD RECORD + GOAL -->
-
-    <div class="row g-4 mt-1">
-
-        <div class="col-lg-6">
-
-            <div class="card p-4">
-
-                <h5 class="section-title mb-3">
-                    ➕ Add Financial Record
-                </h5>
-
-                <form method="POST" action="/add">
-
-                    <label class="form-label">
-                        Income
-                    </label>
-
-                    <input
-                        type="number"
-                        name="income"
-                        class="form-control mb-3"
-                        placeholder="Enter income"
-                        min="0"
-                        step="0.01">
-
-                    <label class="form-label">
-                        Expense
-                    </label>
-
-                    <input
-                        type="number"
-                        name="expense"
-                        class="form-control mb-3"
-                        placeholder="Enter expense"
-                        min="0"
-                        step="0.01">
-
-                    <label class="form-label">
-                        Category
-                    </label>
-
-                    <select
-                        name="category"
-                        class="form-select mb-3">
-
-                        <option>Food</option>
-                        <option>Transport</option>
-                        <option>Shopping</option>
-                        <option>Bills</option>
-                        <option>Education</option>
-                        <option>Entertainment</option>
-                        <option>Healthcare</option>
-                        <option>Other</option>
-
-                    </select>
-
-                    <button class="btn btn-dark w-100">
-                        Add Record
-                    </button>
-
-                </form>
-
-            </div>
-
-        </div>
-
-
-        <div class="col-lg-6">
-
-            <div class="card p-4">
-
-                <h5 class="section-title mb-3">
-                    🎯 Savings Goal
-                </h5>
-
-                {% if goal %}
-
-                    <div class="d-flex justify-content-between">
-
-                        <span>Target</span>
-
-                        <strong>
-                            ₹{{ "%.2f"|format(goal.target) }}
-                        </strong>
-
-                    </div>
-
-                    <div class="d-flex justify-content-between mt-2">
-
-                        <span>Saved</span>
-
-                        <strong>
-                            ₹{{ "%.2f"|format(goal.saved) }}
-                        </strong>
-
-                    </div>
-
-                    <div class="progress mt-3">
-
-                        <div
-                            class="progress-bar"
-                            style="width: {{ goal_progress }}%">
-                        </div>
-
-                    </div>
-
-                    <p class="mt-2 text-muted">
-                        {{ goal_progress }}% completed
-                    </p>
-
-                    <p>
-                        Remaining:
-                        <strong>
-                            ₹{{ "%.2f"|format(goal_remaining) }}
-                        </strong>
-                    </p>
-
-                    {% if estimated_months > 0 %}
-
-                        <p class="text-muted">
-                            💡 Estimated completion:
-                            <strong>
-                                {{ estimated_months }} month(s)
-                            </strong>
-                        </p>
-
+                <div
+                    class="alert
+                    {% if category == 'success' %}
+                        alert-success
+                    {% else %}
+                        alert-info
                     {% endif %}
+                    alert-dismissible fade show"
+                    role="alert">
 
-                {% else %}
+                    {{ message }}
 
-                    <p class="text-muted">
-                        Set a savings goal and track your progress automatically.
-                    </p>
-
-                {% endif %}
-
-
-                <form method="POST" action="/set_goal">
-
-                    <input
-                        type="number"
-                        name="target"
-                        class="form-control mb-3"
-                        placeholder="Enter goal target"
-                        min="1"
-                        step="0.01"
-                        required>
-
-                    <button class="btn btn-outline-dark w-100">
-                        Set / Update Goal
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
                     </button>
-
-                </form>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- CHART -->
-
-    <div class="card p-4 mt-4">
-
-        <h5 class="section-title mb-3">
-            📈 Income vs Expense
-        </h5>
-
-        <canvas id="financeChart" height="100"></canvas>
-
-    </div>
-
-
-    <!-- RECENT TRANSACTIONS -->
-
-    <div class="card p-4 mt-4">
-
-        <h5 class="section-title mb-3">
-            🧾 Recent Transactions
-        </h5>
-
-        {% if recent_transactions %}
-
-            {% for transaction in recent_transactions %}
-
-                <div class="transaction">
-
-                    <div class="d-flex justify-content-between">
-
-                        <div>
-
-                            <strong>
-                                {{ transaction.category }}
-                            </strong>
-
-                            <div class="small text-muted">
-                                {{ transaction.created_at.strftime("%d %b %Y") }}
-                            </div>
-
-                        </div>
-
-                        <div class="text-end">
-
-                            {% if transaction.income > 0 %}
-
-                                <strong>
-                                    +₹{{ "%.2f"|format(transaction.income) }}
-                                </strong>
-
-                            {% endif %}
-
-                            {% if transaction.expense > 0 %}
-
-                                <strong>
-                                    -₹{{ "%.2f"|format(transaction.expense) }}
-                                </strong>
-
-                            {% endif %}
-
-                        </div>
-
-                    </div>
 
                 </div>
 
             {% endfor %}
 
-        {% else %}
+        </div>
 
-            <p class="text-muted mb-0">
-                No transactions yet. Add your first financial record above.
-            </p>
+    {% endif %}
 
-        {% endif %}
+{% endwith %}
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<div class="hero">
+
+    <h2 class="fw-bold">
+
+        Welcome back, {{ full_name }} 👋
+
+    </h2>
+
+
+    <p class="mb-0 opacity-75">
+
+        Your personal financial overview
+        and smart insights are ready.
+
+    </p>
+
+</div>
+
+
+<!-- =====================================================
+     STAT CARDS
+===================================================== -->
+
+<div class="row g-4 mt-1">
+
+
+    <!-- Income -->
+
+    <div class="col-md-4">
+
+        <div class="card stat-card">
+
+            <div class="stat-title">
+
+                Total Income
+
+            </div>
+
+
+            <div class="stat-value text-success">
+
+                ₹{{ "%.2f"|format(total_income) }}
+
+            </div>
+
+        </div>
 
     </div>
 
 
-    <!-- PROFILE -->
+    <!-- Expense -->
 
-    <div class="card p-4 mt-4">
+    <div class="col-md-4">
 
-        <h5 class="section-title">
-            👤 Financial Profile
-        </h5>
+        <div class="card stat-card">
 
-        <div class="row mt-3">
+            <div class="stat-title">
 
-            <div class="col-md-4">
-                <strong>Username</strong>
-                <p class="text-muted">{{ user }}</p>
+                Total Expense
+
             </div>
 
-            <div class="col-md-4">
-                <strong>Monthly Income</strong>
-                <p class="text-muted">
-                    ₹{{ "%.2f"|format(monthly_income or 0) }}
-                </p>
+
+            <div class="stat-value text-danger">
+
+                ₹{{ "%.2f"|format(total_expense) }}
+
             </div>
 
-            <div class="col-md-4">
-                <strong>Primary Goal</strong>
-                <p class="text-muted">
-                    {{ financial_goal or "Not specified" }}
-                </p>
+        </div>
+
+    </div>
+
+
+    <!-- Savings -->
+
+    <div class="col-md-4">
+
+        <div class="card stat-card">
+
+            <div class="stat-title">
+
+                Current Savings
+
+            </div>
+
+
+            <div class="stat-value">
+
+                ₹{{ "%.2f"|format(savings) }}
+
             </div>
 
         </div>
@@ -549,61 +435,792 @@
 </div>
 
 
-<footer class="text-center">
-    <div class="container">
-        Smart-Fin AI • Personal Finance Advisor
+<!-- =====================================================
+     FINANCIAL HEALTH
+===================================================== -->
+
+<div class="row g-4 mt-1">
+
+
+    <div class="col-md-5">
+
+        <div class="card p-4 h-100">
+
+            <h5 class="section-title">
+
+                📊 Financial Health
+
+            </h5>
+
+
+            <div class="text-center mt-3">
+
+                <div class="score">
+
+                    {{ health_score }}/100
+
+                </div>
+
+
+                <div class="text-muted">
+
+                    {{ health_status }}
+
+                </div>
+
+            </div>
+
+
+            <hr>
+
+
+            <div class="d-flex justify-content-between">
+
+                <span>
+
+                    Saving Rate
+
+                </span>
+
+
+                <strong>
+
+                    {{ saving_rate }}%
+
+                </strong>
+
+            </div>
+
+
+            <div class="progress mt-2">
+
+                <div
+                    class="progress-bar"
+                    style="width:
+                        {{ [saving_rate, 100]|min }}%">
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
+
+
+    <div class="col-md-7">
+
+        <div class="card p-4 h-100">
+
+            <h5 class="section-title">
+
+                🧠 Smart Financial Insight
+
+            </h5>
+
+
+            <div class="insight mt-3">
+
+                {{ advice }}
+
+            </div>
+
+
+            <div class="mt-3 text-muted">
+
+                Recommended monthly saving:
+
+                <strong>
+
+                    ₹{{ "%.2f"|format(
+                        recommended_saving
+                    ) }}
+
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     ADD TRANSACTION + SAVINGS GOAL
+===================================================== -->
+
+<div class="row g-4 mt-1">
+
+
+    <!-- ADD TRANSACTION -->
+
+    <div class="col-lg-6">
+
+        <div class="card p-4">
+
+            <h5 class="section-title mb-3">
+
+                ➕ Add Financial Record
+
+            </h5>
+
+
+            <form
+                method="POST"
+                action="/add">
+
+
+                <label class="form-label">
+
+                    Transaction Type
+
+                </label>
+
+
+                <select
+                    name="transaction_type"
+                    class="form-select mb-3"
+                    required>
+
+                    <option value="" selected disabled>
+
+                        Select type
+
+                    </option>
+
+                    <option value="income">
+
+                        Income
+
+                    </option>
+
+                    <option value="expense">
+
+                        Expense
+
+                    </option>
+
+                </select>
+
+
+                <label class="form-label">
+
+                    Amount
+
+                </label>
+
+
+                <input
+                    type="text"
+                    inputmode="decimal"
+                    name="amount"
+                    class="form-control mb-3"
+                    placeholder="Enter amount"
+                    autocomplete="off"
+                    required>
+
+
+                <label class="form-label">
+
+                    Category
+
+                </label>
+
+
+                <select
+                    name="category"
+                    class="form-select mb-3"
+                    required>
+
+                    <option>Food</option>
+
+                    <option>Transport</option>
+
+                    <option>Shopping</option>
+
+                    <option>Bills</option>
+
+                    <option>Education</option>
+
+                    <option>Entertainment</option>
+
+                    <option>Healthcare</option>
+
+                    <option>Other</option>
+
+                </select>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-dark w-100">
+
+                    Add Transaction
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- SAVINGS GOAL -->
+
+    <div class="col-lg-6">
+
+        <div class="card p-4">
+
+            <h5 class="section-title mb-3">
+
+                🎯 Savings Goal
+
+            </h5>
+
+
+            {% if goal %}
+
+
+                <div class="d-flex justify-content-between">
+
+                    <span>
+
+                        Target
+
+                    </span>
+
+
+                    <strong>
+
+                        ₹{{ "%.2f"|format(
+                            goal.target
+                        ) }}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="d-flex justify-content-between mt-2">
+
+                    <span>
+
+                        Saved
+
+                    </span>
+
+
+                    <strong>
+
+                        ₹{{ "%.2f"|format(
+                            goal.saved
+                        ) }}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="progress mt-3">
+
+                    <div
+                        class="progress-bar"
+                        style="width:
+                            {{ goal_progress }}%">
+
+                    </div>
+
+                </div>
+
+
+                <p class="mt-2 text-muted">
+
+                    {{ goal_progress }}%
+                    completed
+
+                </p>
+
+
+                <p>
+
+                    Remaining:
+
+                    <strong>
+
+                        ₹{{ "%.2f"|format(
+                            goal_remaining
+                        ) }}
+
+                    </strong>
+
+                </p>
+
+
+                {% if estimated_months > 0 %}
+
+                    <p class="text-muted">
+
+                        💡 Estimated completion:
+
+                        <strong>
+
+                            {{ estimated_months }}
+                            month(s)
+
+                        </strong>
+
+                    </p>
+
+                {% endif %}
+
+
+            {% else %}
+
+
+                <p class="text-muted">
+
+                    Set a savings goal and track
+                    your progress.
+
+                </p>
+
+
+            {% endif %}
+
+
+            <form
+                method="POST"
+                action="/set_goal">
+
+
+                <input
+                    type="text"
+                    inputmode="decimal"
+                    name="target"
+                    class="form-control mb-3"
+                    placeholder="Enter goal target"
+                    autocomplete="off"
+                    required>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-outline-dark w-100">
+
+                    Set / Update Goal
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     CHART
+===================================================== -->
+
+<div class="card p-4 mt-4">
+
+    <h5 class="section-title mb-3">
+
+        📈 Income vs Expense
+
+    </h5>
+
+
+    <div class="chart-container">
+
+        <canvas id="financeChart"></canvas>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     RECENT TRANSACTIONS
+===================================================== -->
+
+<div class="card p-4 mt-4">
+
+    <h5 class="section-title mb-3">
+
+        🧾 Recent Transactions
+
+    </h5>
+
+
+    {% if recent_transactions %}
+
+
+        {% for transaction in recent_transactions %}
+
+
+            <div class="transaction">
+
+
+                <div class="d-flex
+                            justify-content-between
+                            align-items-center">
+
+
+                    <!-- Transaction information -->
+
+                    <div>
+
+                        <strong>
+
+                            {{ transaction.category }}
+
+                        </strong>
+
+
+                        <div class="small text-muted">
+
+                            {{ transaction.created_at.strftime(
+                                "%d %b %Y, %I:%M %p"
+                            ) }}
+
+                        </div>
+
+
+                        {% if transaction.income > 0 %}
+
+                            <span
+                                class="badge
+                                bg-success-subtle
+                                text-success
+                                mt-1">
+
+                                Income
+
+                            </span>
+
+
+                        {% elif transaction.expense > 0 %}
+
+                            <span
+                                class="badge
+                                bg-danger-subtle
+                                text-danger
+                                mt-1">
+
+                                Expense
+
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Amount + Delete -->
+
+                    <div
+                        class="d-flex
+                               align-items-center
+                               gap-3">
+
+
+                        <div class="text-end">
+
+
+                            {% if transaction.income > 0 %}
+
+                                <strong class="text-success">
+
+                                    +₹{{
+                                        "%.2f"|format(
+                                            transaction.income
+                                        )
+                                    }}
+
+                                </strong>
+
+
+                            {% elif transaction.expense > 0 %}
+
+                                <strong class="text-danger">
+
+                                    -₹{{
+                                        "%.2f"|format(
+                                            transaction.expense
+                                        )
+                                    }}
+
+                                </strong>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <form
+                            method="POST"
+                            action="/delete_transaction/{{
+                                transaction.id
+                            }}"
+                            onsubmit="
+                                return confirm(
+                                    'Delete this transaction?'
+                                );
+                            ">
+
+
+                            <button
+                                type="submit"
+                                class="btn
+                                       btn-sm
+                                       btn-outline-danger"
+                                title="Delete transaction">
+
+                                🗑️
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        {% endfor %}
+
+
+    {% else %}
+
+
+        <p class="text-muted mb-0">
+
+            No transactions yet.
+            Add your first financial record above.
+
+        </p>
+
+
+    {% endif %}
+
+</div>
+
+
+<!-- =====================================================
+     PROFILE
+===================================================== -->
+
+<div class="card p-4 mt-4">
+
+    <h5 class="section-title">
+
+        👤 Financial Profile
+
+    </h5>
+
+
+    <div class="row mt-3">
+
+
+        <div class="col-md-4">
+
+            <strong>
+
+                Username
+
+            </strong>
+
+
+            <p class="text-muted">
+
+                {{ user }}
+
+            </p>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <strong>
+
+                Monthly Income
+
+            </strong>
+
+
+            <p class="text-muted">
+
+                ₹{{ "%.2f"|format(
+                    monthly_income or 0
+                ) }}
+
+            </p>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <strong>
+
+                Primary Goal
+
+            </strong>
+
+
+            <p class="text-muted">
+
+                {{ financial_goal or
+                   "Not specified" }}
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</div>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="text-center">
+
+    <div class="container">
+
+        Smart-Fin AI • Personal Finance Advisor
+
+    </div>
+
 </footer>
 
 
+<!-- Bootstrap JS -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+<!-- =====================================================
+     CHART SCRIPT
+===================================================== -->
+
 <script>
 
-const labels = {{ chart_labels | tojson }};
-const incomeData = {{ income_list | tojson }};
-const expenseData = {{ expense_list | tojson }};
+const labels =
+    {{ chart_labels | tojson }};
+
+const incomeData =
+    {{ income_list | tojson }};
+
+const expenseData =
+    {{ expense_list | tojson }};
+
 
 new Chart(
-    document.getElementById("financeChart"),
+
+    document.getElementById(
+        "financeChart"
+    ),
+
     {
+
         type: "line",
 
+
         data: {
+
             labels: labels,
 
+
             datasets: [
+
                 {
+
                     label: "Income",
+
                     data: incomeData,
-                    tension: 0.3
+
+                    tension: 0.3,
+
+                    borderWidth: 2,
+
+                    fill: false
+
                 },
 
+
                 {
+
                     label: "Expense",
+
                     data: expenseData,
-                    tension: 0.3
+
+                    tension: 0.3,
+
+                    borderWidth: 2,
+
+                    fill: false
+
                 }
+
             ]
+
         },
 
+
         options: {
+
             responsive: true,
 
+            maintainAspectRatio: false,
+
+
             plugins: {
+
                 legend: {
+
                     position: "top"
+
                 }
+
             },
 
+
             scales: {
+
                 y: {
+
                     beginAtZero: true
+
                 }
+
             }
+
         }
+
     }
+
 );
 
 </script>
 
+
 </body>
+
 </html>
