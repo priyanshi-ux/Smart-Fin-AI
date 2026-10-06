@@ -1,4 +1,3 @@
-```python
 from flask import Flask, render_template, request, redirect, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -849,4 +848,3 @@ if __name__ == "__main__":
     app.run(
         debug=True
     )
-```
