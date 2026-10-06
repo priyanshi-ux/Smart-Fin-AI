@@ -1411,6 +1411,11 @@
         }
 
     </style>
+    <!-- Link to external CSS file -->
+    <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='chatbot.css') }}"
+    >
 </head>
 
 
@@ -2332,7 +2337,90 @@
 
 
 </script>
+<!-- =========================
+     SMART-FIN AI CHATBOT
+========================= -->
 
+<div id="chatbot-container">
+
+    <button id="chatbot-toggle" type="button" aria-label="Open Smart-Fin AI Assistant">
+        ✦
+    </button>
+
+    <div id="chatbot-window">
+
+        <div class="chatbot-header">
+
+            <div>
+                <div class="chatbot-title">
+                    Smart-Fin AI
+                </div>
+
+                <div class="chatbot-status">
+                    ● AI Assistant
+                </div>
+            </div>
+
+            <button id="chatbot-close" type="button" aria-label="Close chatbot">
+                ×
+            </button>
+
+        </div>
+
+        <div id="chatbot-messages">
+
+            <div class="chat-message bot-message">
+                <div class="message-bubble">
+                    Hi! 👋 I'm your Smart-Fin AI Assistant.
+                    <br><br>
+                    I can help you with budgeting, saving,
+                    expenses and financial goals.
+                </div>
+            </div>
+
+        </div>
+
+        <div class="chatbot-quick-actions">
+
+            <button type="button" class="quick-btn">
+                Create a budget
+            </button>
+
+            <button type="button" class="quick-btn">
+                Income vs expenses
+            </button>
+
+            <button type="button" class="quick-btn">
+                Saving tips
+            </button>
+
+        </div>
+
+        <div class="chatbot-input-area">
+
+            <input
+                type="text"
+                id="chatbot-input"
+                placeholder="Ask Smart-Fin AI..."
+                autocomplete="off"
+            >
+
+            <button
+                type="button"
+                id="chatbot-send"
+                aria-label="Send message"
+            >
+                ➤
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+<script
+    src="{{ url_for('static', filename='chatbot.js') }}">
+</script>
 
 </body>
 </html>
