@@ -1,26 +1,210 @@
+```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Register</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | Smart-Fin AI</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #eef7f2, #e8f0ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            padding: 25px;
+        }
+
+        .register-card {
+            width: 100%;
+            max-width: 650px;
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.10);
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .brand h1 {
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .brand p {
+            color: #6c757d;
+            margin: 0;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 10px;
+            padding: 11px 13px;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            box-shadow: 0 0 0 3px rgba(25,135,84,.12);
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 
-<body class="bg-primary d-flex justify-content-center align-items-center vh-100">
+<body>
 
-<div class="card p-4 shadow-lg" style="width: 350px;">
-    <h2 class="text-center text-white">Create Account</h2>
+<div class="register-card">
 
-    <form method="POST">
-        <input type="text" name="username" class="form-control mb-3" placeholder="Username" required>
-        <input type="password" name="password" class="form-control mb-3" placeholder="Password" required>
+    <div class="brand">
+        <h1>💰 Smart-Fin AI</h1>
+        <p>Your Personal Smart Finance Advisor</p>
+    </div>
 
-        <button class="btn btn-success w-100">Register</button>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="/register">
+
+        <div class="section-title">👤 Personal Information</div>
+
+        <div class="mb-3">
+            <label class="form-label">Full Name *</label>
+            <input
+                type="text"
+                name="full_name"
+                class="form-control"
+                placeholder="Enter your full name"
+                required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email Address *</label>
+            <input
+                type="email"
+                name="email"
+                class="form-control"
+                placeholder="you@example.com"
+                required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Username *</label>
+            <input
+                type="text"
+                name="username"
+                class="form-control"
+                placeholder="Choose a username"
+                minlength="3"
+                required>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Password *</label>
+                <input
+                    type="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="Minimum 6 characters"
+                    minlength="6"
+                    required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Confirm Password *</label>
+                <input
+                    type="password"
+                    name="confirm_password"
+                    class="form-control"
+                    placeholder="Re-enter password"
+                    minlength="6"
+                    required>
+            </div>
+
+        </div>
+
+        <div class="section-title">📊 Financial Profile</div>
+
+        <div class="mb-3">
+            <label class="form-label">Monthly Income (₹)</label>
+            <input
+                type="number"
+                name="monthly_income"
+                class="form-control"
+                placeholder="e.g. 30000"
+                min="0"
+                step="0.01">
+            <div class="form-text">
+                This helps Smart-Fin provide better financial insights.
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Primary Financial Goal</label>
+
+            <select name="financial_goal" class="form-select">
+                <option value="">Select your goal</option>
+                <option value="Emergency Fund">Build an Emergency Fund</option>
+                <option value="Save Money">Save More Money</option>
+                <option value="Education">Education</option>
+                <option value="Travel">Travel</option>
+                <option value="Investment">Investment</option>
+                <option value="Buy a Vehicle">Buy a Vehicle</option>
+                <option value="Buy a House">Buy a House</option>
+                <option value="Debt Management">Debt Management</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success btn-register">
+            Create My Smart-Fin Account →
+        </button>
+
     </form>
 
-    <p class="text-center mt-3">
-        Already have account? <a href="/login">Login</a>
-    </p>
+    <div class="login-link">
+        Already have an account?
+        <a href="/login" class="fw-bold text-success">Login here</a>
+    </div>
+
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
+```
