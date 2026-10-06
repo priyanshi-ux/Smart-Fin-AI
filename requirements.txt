@@ -2,3 +2,5 @@ Flask
 Flask-SQLAlchemy
 Flask-Bcrypt
 gunicorn
+openai
+python-dotenv
