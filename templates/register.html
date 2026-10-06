@@ -3,13 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Create Account | Smart-Fin AI</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             min-height: 100vh;
+            margin: 0;
             background: linear-gradient(135deg, #eef7f2, #e8f0ff);
             display: flex;
             align-items: center;
@@ -20,57 +29,112 @@
 
         .register-card {
             width: 100%;
-            max-width: 650px;
-            background: white;
-            border-radius: 20px;
+            max-width: 680px;
+            background: #ffffff;
+            border-radius: 22px;
             padding: 35px;
-            box-shadow: 0 12px 35px rgba(0,0,0,0.10);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.10);
         }
 
         .brand {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 28px;
+        }
+
+        .brand-icon {
+            font-size: 42px;
+            margin-bottom: 5px;
         }
 
         .brand h1 {
+            font-size: 30px;
             font-weight: 700;
-            margin-bottom: 5px;
+            margin: 0 0 6px;
+            color: #198754;
         }
 
         .brand p {
             color: #6c757d;
             margin: 0;
+            font-size: 15px;
         }
 
         .section-title {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 700;
-            margin-top: 20px;
-            margin-bottom: 12px;
+            color: #212529;
+            margin-top: 22px;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #343a40;
+            margin-bottom: 7px;
         }
 
         .form-control,
         .form-select {
             border-radius: 10px;
             padding: 11px 13px;
+            border: 1px solid #ced4da;
         }
 
         .form-control:focus,
         .form-select:focus {
-            box-shadow: 0 0 0 3px rgba(25,135,84,.12);
+            border-color: #198754;
+            box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.12);
+        }
+
+        .form-text {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 5px;
         }
 
         .btn-register {
             width: 100%;
-            padding: 12px;
+            padding: 13px;
             border-radius: 10px;
             font-weight: 600;
-            margin-top: 15px;
+            font-size: 16px;
+            margin-top: 18px;
+            transition: 0.2s ease;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-1px);
         }
 
         .login-link {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 22px;
+            color: #6c757d;
+        }
+
+        .login-link a {
+            text-decoration: none;
+        }
+
+        .alert {
+            border-radius: 10px;
+        }
+
+        @media (max-width: 576px) {
+            body {
+                padding: 12px;
+            }
+
+            .register-card {
+                padding: 24px 18px;
+                border-radius: 16px;
+            }
+
+            .brand h1 {
+                font-size: 25px;
+            }
         }
     </style>
 </head>
@@ -79,130 +143,278 @@
 
 <div class="register-card">
 
+    <!-- Brand -->
     <div class="brand">
-        <h1>💰 Smart-Fin AI</h1>
+        <div class="brand-icon">💰</div>
+
+        <h1>Smart-Fin AI</h1>
+
         <p>Your Personal Smart Finance Advisor</p>
     </div>
 
+
+    <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
+
         {% if messages %}
+
             {% for category, message in messages %}
-                <div class="alert alert-{{ category }} alert-dismissible fade show">
+
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+
                     {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close">
+                    </button>
+
                 </div>
+
             {% endfor %}
+
         {% endif %}
+
     {% endwith %}
 
+
+    <!-- Registration Form -->
     <form method="POST" action="/register">
 
-        <div class="section-title">👤 Personal Information</div>
-
-        <div class="mb-3">
-            <label class="form-label">Full Name *</label>
-            <input
-                type="text"
-                name="full_name"
-                class="form-control"
-                placeholder="Enter your full name"
-                required>
+        <!-- Personal Information -->
+        <div class="section-title">
+            👤 Personal Information
         </div>
 
+
+        <!-- Name -->
         <div class="mb-3">
-            <label class="form-label">Email Address *</label>
+
+            <label for="full_name" class="form-label">
+                Name *
+            </label>
+
+            <input
+                type="text"
+                id="full_name"
+                name="full_name"
+                class="form-control"
+                placeholder="Enter your name"
+                autocomplete="name"
+                required
+            >
+
+        </div>
+
+
+        <!-- Email -->
+        <div class="mb-3">
+
+            <label for="email" class="form-label">
+                Email Address *
+            </label>
+
             <input
                 type="email"
+                id="email"
                 name="email"
                 class="form-control"
                 placeholder="you@example.com"
-                required>
+                autocomplete="email"
+                required
+            >
+
         </div>
 
+
+        <!-- Username -->
         <div class="mb-3">
-            <label class="form-label">Username *</label>
+
+            <label for="username" class="form-label">
+                Username *
+            </label>
+
             <input
                 type="text"
+                id="username"
                 name="username"
                 class="form-control"
                 placeholder="Choose a username"
                 minlength="3"
-                required>
+                autocomplete="username"
+                required
+            >
+
         </div>
 
+
+        <!-- Password Row -->
         <div class="row">
 
+            <!-- Password -->
             <div class="col-md-6 mb-3">
-                <label class="form-label">Password *</label>
+
+                <label for="password" class="form-label">
+                    Password *
+                </label>
+
                 <input
                     type="password"
+                    id="password"
                     name="password"
                     class="form-control"
                     placeholder="Minimum 6 characters"
                     minlength="6"
-                    required>
+                    autocomplete="new-password"
+                    required
+                >
+
             </div>
 
+
+            <!-- Confirm Password -->
             <div class="col-md-6 mb-3">
-                <label class="form-label">Confirm Password *</label>
+
+                <label for="confirm_password" class="form-label">
+                    Confirm Password *
+                </label>
+
                 <input
                     type="password"
+                    id="confirm_password"
                     name="confirm_password"
                     class="form-control"
                     placeholder="Re-enter password"
                     minlength="6"
-                    required>
+                    autocomplete="new-password"
+                    required
+                >
+
             </div>
 
         </div>
 
-        <div class="section-title">📊 Financial Profile</div>
 
+        <!-- Financial Profile -->
+        <div class="section-title">
+            📊 Financial Profile
+        </div>
+
+
+        <!-- Monthly Income -->
         <div class="mb-3">
-            <label class="form-label">Monthly Income (₹)</label>
+
+            <label for="monthly_income" class="form-label">
+                Monthly Income (₹)
+            </label>
+
             <input
                 type="number"
+                id="monthly_income"
                 name="monthly_income"
                 class="form-control"
                 placeholder="e.g. 30000"
                 min="0"
-                step="0.01">
+                step="0.01"
+            >
+
             <div class="form-text">
-                This helps Smart-Fin provide better financial insights.
+                This helps Smart-Fin AI provide personalized financial insights.
             </div>
+
         </div>
 
+
+        <!-- Financial Goal -->
         <div class="mb-3">
-            <label class="form-label">Primary Financial Goal</label>
 
-            <select name="financial_goal" class="form-select">
+            <label for="financial_goal" class="form-label">
+                Primary Financial Goal
+            </label>
+
+            <select
+                id="financial_goal"
+                name="financial_goal"
+                class="form-select"
+            >
+
                 <option value="">Select your goal</option>
-                <option value="Emergency Fund">Build an Emergency Fund</option>
-                <option value="Save Money">Save More Money</option>
-                <option value="Education">Education</option>
-                <option value="Travel">Travel</option>
-                <option value="Investment">Investment</option>
-                <option value="Buy a Vehicle">Buy a Vehicle</option>
-                <option value="Buy a House">Buy a House</option>
-                <option value="Debt Management">Debt Management</option>
-                <option value="Other">Other</option>
+
+                <option value="Emergency Fund">
+                    Build an Emergency Fund
+                </option>
+
+                <option value="Save Money">
+                    Save More Money
+                </option>
+
+                <option value="Education">
+                    Education
+                </option>
+
+                <option value="Travel">
+                    Travel
+                </option>
+
+                <option value="Investment">
+                    Investment
+                </option>
+
+                <option value="Buy a Vehicle">
+                    Buy a Vehicle
+                </option>
+
+                <option value="Buy a House">
+                    Buy a House
+                </option>
+
+                <option value="Debt Management">
+                    Debt Management
+                </option>
+
+                <option value="Other">
+                    Other
+                </option>
+
             </select>
+
         </div>
 
-        <button type="submit" class="btn btn-success btn-register">
+
+        <!-- Submit -->
+        <button
+            type="submit"
+            class="btn btn-success btn-register"
+        >
             Create My Smart-Fin Account →
         </button>
 
     </form>
 
+
+    <!-- Login -->
     <div class="login-link">
+
         Already have an account?
-        <a href="/login" class="fw-bold text-success">Login here</a>
+
+        <a
+            href="/login"
+            class="fw-bold text-success"
+        >
+            Login here
+        </a>
+
     </div>
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
 
 </body>
 </html>
