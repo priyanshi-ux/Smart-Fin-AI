@@ -240,25 +240,14 @@ def register():
         # -----------------------------
         # Password validation
         # -----------------------------
-
-        if len(password) < 6:
-
-            flash(
-                "Password must contain at least 6 characters.",
-                "danger"
-            )
-
-            return redirect("/register")
-
-
         if password != confirm_password:
-
-            flash(
-                "Passwords do not match.",
-                "danger"
-            )
-
+            flash("Passwords do not match.", "info")
             return redirect("/register")
+        
+        if len(password) < 8:
+            flash("For better account security, please use at least 8 characters.", "info")
+            return redirect("/register")
+              
 
 
         # -----------------------------
