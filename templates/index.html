@@ -1,40 +1,727 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Smart Finance</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart-Fin AI | Personal Finance Advisor</title>
+
+    <meta
+        name="description"
+        content="Smart-Fin AI is your personal finance advisor for tracking income, expenses, savings and financial goals."
+    >
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7faf8;
+            color: #212529;
+        }
+
+        /* NAVBAR */
+
+        .navbar-custom {
+            background: #ffffff;
+            box-shadow: 0 3px 15px rgba(0,0,0,.07);
+            padding: 15px 0;
+        }
+
+        .brand {
+            color: #198754;
+            font-size: 23px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .nav-link-custom {
+            color: #495057;
+            text-decoration: none;
+            margin-left: 25px;
+            font-weight: 500;
+        }
+
+        .nav-link-custom:hover {
+            color: #198754;
+        }
+
+        /* HERO */
+
+        .hero {
+            min-height: 560px;
+            display: flex;
+            align-items: center;
+            background:
+                linear-gradient(135deg, #eef9f3, #edf3ff);
+            padding: 70px 0;
+        }
+
+        .hero-content {
+            max-width: 650px;
+        }
+
+        .badge-custom {
+            display: inline-block;
+            background: #dff5e8;
+            color: #198754;
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: 52px;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span {
+            color: #198754;
+        }
+
+        .hero p {
+            color: #5f6b66;
+            font-size: 19px;
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        .btn-primary-custom {
+            background: #198754;
+            border: none;
+            color: white;
+            padding: 13px 27px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .btn-primary-custom:hover {
+            background: #146c43;
+            color: white;
+        }
+
+        .btn-outline-custom {
+            border: 1px solid #198754;
+            color: #198754;
+            padding: 12px 27px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-outline-custom:hover {
+            background: #198754;
+            color: white;
+        }
+
+        /* HERO CARD */
+
+        .finance-preview {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,.10);
+        }
+
+        .preview-title {
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .preview-card {
+            background: #f8faf9;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .preview-label {
+            color: #6c757d;
+            font-size: 13px;
+        }
+
+        .preview-value {
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .green {
+            color: #198754;
+        }
+
+        .red {
+            color: #dc3545;
+        }
+
+        .blue {
+            color: #0d6efd;
+        }
+
+        /* FEATURES */
+
+        .features {
+            padding: 75px 0;
+            background: white;
+        }
+
+        .section-heading {
+            text-align: center;
+            margin-bottom: 45px;
+        }
+
+        .section-heading h2 {
+            font-weight: 750;
+            font-size: 34px;
+        }
+
+        .section-heading p {
+            color: #6c757d;
+            max-width: 600px;
+            margin: 10px auto;
+        }
+
+        .feature-card {
+            height: 100%;
+            background: #ffffff;
+            border-radius: 17px;
+            padding: 28px;
+            box-shadow: 0 5px 22px rgba(0,0,0,.06);
+            border: 1px solid #f0f0f0;
+        }
+
+        .feature-icon {
+            font-size: 34px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h5 {
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: #6c757d;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        /* HOW IT WORKS */
+
+        .how-section {
+            padding: 75px 0;
+            background: #f7faf8;
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 25px;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            background: #198754;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .step-card h5 {
+            font-weight: 700;
+        }
+
+        .step-card p {
+            color: #6c757d;
+        }
+
+        /* CTA */
+
+        .cta {
+            padding: 70px 0;
+            background: linear-gradient(135deg, #198754, #146c43);
+            color: white;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-weight: 750;
+            font-size: 35px;
+        }
+
+        .cta p {
+            opacity: .9;
+            margin: 15px auto 25px;
+        }
+
+        .btn-light-custom {
+            display: inline-block;
+            background: white;
+            color: #198754;
+            padding: 13px 28px;
+            border-radius: 10px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .btn-light-custom:hover {
+            color: #146c43;
+        }
+
+        /* FOOTER */
+
+        footer {
+            background: #10231a;
+            color: #b9c7c0;
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        footer strong {
+            color: white;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 768px) {
+
+            .hero {
+                padding: 55px 0;
+            }
+
+            .hero h1 {
+                font-size: 38px;
+            }
+
+            .hero p {
+                font-size: 17px;
+            }
+
+            .finance-preview {
+                margin-top: 35px;
+            }
+
+            .nav-link-custom {
+                margin-left: 10px;
+            }
+
+        }
+    </style>
 </head>
+
 <body>
 
-<header>
-    <h2>💰 Smart Finance</h2>
-    <nav>
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-        <a href="/contact">Contact</a>
-    </nav>
-</header>
+<!-- NAVBAR -->
+
+<nav class="navbar-custom">
+    <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <a href="/" class="brand">
+                💰 Smart-Fin AI
+            </a>
+
+            <div>
+                <a href="/" class="nav-link-custom">
+                    Home
+                </a>
+
+                <a href="/about" class="nav-link-custom">
+                    About
+                </a>
+
+                <a href="/contact" class="nav-link-custom">
+                    Contact
+                </a>
+
+                <a href="/login" class="btn btn-outline-success btn-sm ms-2">
+                    Login
+                </a>
+
+                <a href="/register" class="btn btn-success btn-sm">
+                    Get Started
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+</nav>
+
+
+<!-- HERO -->
 
 <section class="hero">
-    <div class="text">
-        <h1>Smart Finance</h1>
-        <p>Manage your finances with AI-powered insights</p>
-        <button onclick="scrollToBudget()">Get Started</button>
+
+    <div class="container">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-7">
+
+                <div class="hero-content">
+
+                    <div class="badge-custom">
+                        🤖 Smart • Simple • Personalized
+                    </div>
+
+                    <h1>
+                        Take Control of Your
+                        <span>Financial Future</span>
+                    </h1>
+
+                    <p>
+                        Smart-Fin AI is your personal finance advisor that helps
+                        you track income, manage expenses, monitor savings and
+                        work towards your financial goals.
+                    </p>
+
+                    <a href="/register" class="btn-primary-custom">
+                        Create Free Account →
+                    </a>
+
+                    <a href="/login" class="btn-outline-custom">
+                        Login
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Dashboard Preview -->
+
+            <div class="col-lg-5">
+
+                <div class="finance-preview">
+
+                    <div class="preview-title">
+                        📊 Your Financial Snapshot
+                    </div>
+
+                    <div class="preview-card">
+
+                        <div class="preview-label">
+                            Total Income
+                        </div>
+
+                        <div class="preview-value green">
+                            ₹50,000
+                        </div>
+
+                    </div>
+
+                    <div class="preview-card">
+
+                        <div class="preview-label">
+                            Total Expenses
+                        </div>
+
+                        <div class="preview-value red">
+                            ₹30,000
+                        </div>
+
+                    </div>
+
+                    <div class="preview-card">
+
+                        <div class="preview-label">
+                            Current Savings
+                        </div>
+
+                        <div class="preview-value blue">
+                            ₹20,000
+                        </div>
+
+                    </div>
+
+                    <div class="alert alert-success mb-0 mt-3">
+                        💡 Great! You are maintaining a healthy saving rate.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
+
 </section>
 
-<section id="budget">
-    <h2>Budget Calculator</h2>
 
-    <input type="number" id="income" placeholder="Enter Income">
-    <input type="number" id="expenses" placeholder="Enter Expenses">
+<!-- FEATURES -->
 
-    <button onclick="calculate()">Calculate</button>
+<section class="features">
 
-    <h3 id="result"></h3>
+    <div class="container">
+
+        <div class="section-heading">
+
+            <h2>
+                Everything You Need to Manage Money
+            </h2>
+
+            <p>
+                Smart-Fin AI brings your essential personal finance tools
+                together in one simple dashboard.
+            </p>
+
+        </div>
+
+
+        <div class="row g-4">
+
+            <div class="col-md-6 col-lg-3">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        💰
+                    </div>
+
+                    <h5>
+                        Track Income
+                    </h5>
+
+                    <p>
+                        Keep a clear record of your income and understand
+                        your overall financial position.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-3">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        💸
+                    </div>
+
+                    <h5>
+                        Manage Expenses
+                    </h5>
+
+                    <p>
+                        Record expenses and identify how your money is being
+                        spent over time.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-3">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        🎯
+                    </div>
+
+                    <h5>
+                        Savings Goals
+                    </h5>
+
+                    <p>
+                        Set financial targets and monitor your progress
+                        towards achieving them.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-3">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        🤖
+                    </div>
+
+                    <h5>
+                        Smart Insights
+                    </h5>
+
+                    <p>
+                        Get simple personalized insights based on your
+                        income, expenses and savings behaviour.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </section>
 
-<script src="/static/script.js"></script>
+
+<!-- HOW IT WORKS -->
+
+<section class="how-section">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <h2>
+                How Smart-Fin AI Works
+            </h2>
+
+            <p>
+                Start managing your finances in just three simple steps.
+            </p>
+
+        </div>
+
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+
+                <div class="step-card">
+
+                    <div class="step-number">
+                        1
+                    </div>
+
+                    <h5>
+                        Create Your Profile
+                    </h5>
+
+                    <p>
+                        Register your account and provide your basic
+                        financial information.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <div class="step-card">
+
+                    <div class="step-number">
+                        2
+                    </div>
+
+                    <h5>
+                        Track Your Money
+                    </h5>
+
+                    <p>
+                        Add income, expenses and savings goals through
+                        your personal dashboard.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <div class="step-card">
+
+                    <div class="step-number">
+                        3
+                    </div>
+
+                    <h5>
+                        Get Smart Insights
+                    </h5>
+
+                    <p>
+                        Understand your financial habits and make
+                        better money-management decisions.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- CTA -->
+
+<section class="cta">
+
+    <div class="container">
+
+        <h2>
+            Ready to Take Control of Your Finances?
+        </h2>
+
+        <p>
+            Start your personal financial journey with Smart-Fin AI.
+        </p>
+
+        <a href="/register" class="btn-light-custom">
+            Create Your Account →
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <div class="container">
+
+        <strong>Smart-Fin AI</strong>
+
+        <br>
+
+        Personal Finance Advisor
+
+        <br><br>
+
+        © 2026 Smart-Fin AI. All rights reserved.
+
+    </div>
+
+</footer>
 
 </body>
 </html>
