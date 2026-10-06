@@ -1,0 +1,75 @@
+body {
+    font-family: Arial;
+    margin: 0;
+    background: #f5f7fa;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    background: #2b3cff;
+    color: white;
+}
+
+nav a {
+    color: white;
+    margin: 10px;
+    text-decoration: none;
+}
+
+.hero {
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to right, #2b3cff, #6a11cb);
+    color: white;
+}
+
+.hero h1 {
+    font-size: 50px;
+}
+
+button {
+    padding: 10px 20px;
+    background: #2b3cff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#budget {
+    text-align: center;
+    padding: 40px;
+}
+
+input {
+    padding: 10px;
+    margin: 10px;
+    width: 200px;
+}
+
+.about {
+    text-align: center;
+    padding: 50px;
+    background: #111;
+    color: white;
+}
+
+.cards {
+    display: flex;
+    justify-content: center;
+}
+
+.card {
+    margin: 10px;
+    padding: 20px;
+    border: 2px solid cyan;
+    border-radius: 10px;
+}
+
+.contact {
+    padding: 50px;
+    text-align: center;
+}
