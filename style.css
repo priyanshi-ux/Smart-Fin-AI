@@ -1,75 +1,289 @@
-body {
-    font-family: Arial;
-    margin: 0;
-    background: #f5f7fa;
+/* =========================
+   GLOBAL
+========================= */
+
+* {
+    box-sizing: border-box;
 }
+
+html {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f5f7fa;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* =========================
+   HEADER / NAVIGATION
+========================= */
 
 header {
     display: flex;
     justify-content: space-between;
-    padding: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 15px 25px;
     background: #2b3cff;
     color: white;
 }
 
-nav a {
-    color: white;
-    margin: 10px;
-    text-decoration: none;
+header h1,
+header h2,
+header h3,
+header p {
+    margin: 0;
 }
 
+nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+nav a {
+    color: white;
+    margin: 5px 8px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* =========================
+   HERO
+========================= */
+
 .hero {
-    height: 80vh;
+    min-height: 80vh;
+    padding: 60px 20px;
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
     background: linear-gradient(to right, #2b3cff, #6a11cb);
     color: white;
 }
 
 .hero h1 {
     font-size: 50px;
+    line-height: 1.15;
+    margin: 0 0 20px;
 }
+
+.hero p {
+    max-width: 700px;
+    margin: 0 auto 25px;
+    line-height: 1.6;
+}
+
+/* =========================
+   BUTTONS
+========================= */
 
 button {
     padding: 10px 20px;
     background: #2b3cff;
     color: white;
     border: none;
+    border-radius: 8px;
     cursor: pointer;
+    font-size: 15px;
+    transition: 0.2s ease;
 }
+
+button:hover {
+    opacity: 0.9;
+}
+
+/* =========================
+   BUDGET
+========================= */
 
 #budget {
     text-align: center;
-    padding: 40px;
+    padding: 40px 20px;
 }
 
 input {
     padding: 10px;
     margin: 10px;
     width: 200px;
+    max-width: calc(100% - 20px);
+    border: 1px solid #ccc;
+    border-radius: 6px;
 }
+
+/* =========================
+   ABOUT
+========================= */
 
 .about {
     text-align: center;
-    padding: 50px;
+    padding: 50px 20px;
     background: #111;
     color: white;
 }
 
+.about p {
+    max-width: 800px;
+    margin: auto;
+    line-height: 1.7;
+}
+
+/* =========================
+   CARDS
+========================= */
+
 .cards {
     display: flex;
     justify-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 20px;
 }
 
 .card {
-    margin: 10px;
+    margin: 0;
     padding: 20px;
     border: 2px solid cyan;
     border-radius: 10px;
+    max-width: 350px;
+    width: 100%;
 }
 
+/* =========================
+   CONTACT
+========================= */
+
 .contact {
-    padding: 50px;
+    padding: 50px 20px;
     text-align: center;
+}
+
+.contact form {
+    max-width: 600px;
+    margin: auto;
+}
+
+/* =========================
+   MOBILE RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+    header {
+        padding: 15px;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    nav {
+        justify-content: center;
+        width: 100%;
+    }
+
+    nav a {
+        margin: 5px 7px;
+        font-size: 14px;
+    }
+
+    .hero {
+        min-height: 70vh;
+        padding: 50px 18px;
+    }
+
+    .hero h1 {
+        font-size: 36px;
+    }
+
+    .hero p {
+        font-size: 15px;
+    }
+
+    #budget {
+        padding: 30px 15px;
+    }
+
+    input {
+        width: 100%;
+        max-width: 100%;
+        margin: 7px 0;
+    }
+
+    button {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 8px;
+    }
+
+    .about {
+        padding: 40px 18px;
+    }
+
+    .cards {
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .contact {
+        padding: 40px 18px;
+    }
+}
+
+/* =========================
+   SMALL PHONES
+========================= */
+
+@media (max-width: 480px) {
+
+    .hero {
+        min-height: 65vh;
+        padding: 40px 15px;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    .hero p {
+        font-size: 14px;
+    }
+
+    nav {
+        gap: 2px;
+    }
+
+    nav a {
+        font-size: 13px;
+        margin: 4px;
+    }
+
+    .card {
+        padding: 16px;
+    }
+
+    #budget,
+    .about,
+    .contact {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
 }
