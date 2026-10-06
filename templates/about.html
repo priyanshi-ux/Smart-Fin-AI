@@ -1,23 +1,1587 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <link rel="stylesheet" href="/static/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>About | Smart-Fin AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f6faf8;
+            color: #17231d;
+            overflow-x: hidden;
+        }
+
+        /* ================= NAVBAR - SAME AS HOME ================= */
+
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.96);
+            border-bottom: 1px solid #e5eee8;
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(12px);
+        }
+
+        .navbar-inner {
+            max-width: 1200px;
+            margin: auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+        text-decoration: none;
+        color: #125737;
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+       }
+
+        .desktop-navigation {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link-custom {
+            text-decoration: none;
+            color: #4d6659;
+            font-weight: 600;
+            margin-left: 25px;
+            transition: 0.3s;
+        }
+
+        .nav-link-custom:hover {
+            color: #198754;
+        }
+
+        .login-button {
+            text-decoration: none;
+            border: 1px solid #198754;
+            color: #198754;
+            padding: 8px 17px;
+            border-radius: 7px;
+            font-weight: 600;
+            margin-left: 28px;
+            transition: .3s;
+        }
+
+        .login-button:hover {
+            background: #eaf8f0;
+        }
+
+        .start-button {
+            text-decoration: none;
+            background: #198754;
+            color: white;
+            padding: 9px 18px;
+            border-radius: 7px;
+            font-weight: 600;
+            margin-left: 8px;
+            transition: .3s;
+        }
+
+        .start-button:hover {
+            background: #146c43;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 27px;
+            color: #173b2b;
+            cursor: pointer;
+        }
+
+        .mobile-menu {
+            display: none;
+        }
+
+
+        /* ================= HERO ================= */
+
+        .hero {
+            position: relative;
+            padding: 58px 20px 65px;
+            background: linear-gradient(135deg, #eaf8f0, #edf3ff);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            background: rgba(25, 135, 84, .10);
+            border-radius: 50%;
+            top: -100px;
+            right: -80px;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            background: rgba(13, 110, 253, .07);
+            border-radius: 50%;
+            bottom: -70px;
+            left: -50px;
+        }
+
+        .hero-grid {
+            max-width: 1150px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            gap: 55px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ================= PROFESSIONAL AI BADGE ================= */
+
+        .smart-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,.75);
+            border: 1px solid rgba(25,135,84,.18);
+            color: #176b46;
+            padding: 10px 16px;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: 750;
+            margin-bottom: 18px;
+            box-shadow: 0 6px 18px rgba(25,135,84,.07);
+        }
+
+        .ai-symbol {
+            width: 27px;
+            height: 27px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #198754, #146c43);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .3px;
+        }
+
+        .hero h1 {
+            font-size: 52px;
+            line-height: 1.1;
+            margin: 0 0 18px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+        }
+
+        .hero h1 span {
+            color: #198754;
+        }
+
+        .hero-text {
+            color: #5e6b64;
+            font-size: 18px;
+            line-height: 1.7;
+            max-width: 650px;
+            margin-bottom: 25px;
+        }
+
+        /* ================= EXPLORE BUTTON ================= */
+
+        .explore-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            text-decoration: none;
+            background: #198754;
+            color: white;
+            padding: 13px 22px;
+            border-radius: 10px;
+            font-weight: 700;
+            transition: .3s;
+            box-shadow: 0 8px 22px rgba(25,135,84,.18);
+        }
+
+        .explore-button:hover {
+            background: #146c43;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(25,135,84,.25);
+        }
+
+        .explore-arrow {
+            transition: .3s;
+        }
+
+        .explore-button:hover .explore-arrow {
+            transform: translateY(3px);
+        }
+
+
+        /* ================= DASHBOARD ================= */
+
+        .visual-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, .10);
+            transform: rotate(1deg);
+            transition: .35s ease;
+        }
+
+        .visual-card:hover {
+            transform: rotate(0deg) translateY(-7px);
+            box-shadow: 0 25px 55px rgba(0, 0, 0, .14);
+        }
+
+        .visual-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .visual-title {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .status {
+            background: #e8f7ef;
+            color: #198754;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .balance {
+            background: linear-gradient(135deg, #198754, #146c43);
+            color: white;
+            padding: 23px;
+            border-radius: 17px;
+            margin-bottom: 15px;
+        }
+
+        .balance small {
+            opacity: .85;
+        }
+
+        .balance h2 {
+            margin: 7px 0 0;
+            font-size: 31px;
+        }
+
+        .mini-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .mini-card {
+            background: #f7faf8;
+            padding: 17px;
+            border-radius: 14px;
+        }
+
+        .mini-card small {
+            color: #6c757d;
+        }
+
+        .mini-card strong {
+            display: block;
+            margin-top: 5px;
+            font-size: 19px;
+        }
+
+        .income {
+            color: #198754;
+        }
+
+        .expense {
+            color: #dc3545;
+        }
+
+
+        /* ================= STATS ================= */
+
+        .stats {
+            background: white;
+            padding: 32px 20px;
+            border-bottom: 1px solid #edf0ee;
+        }
+
+        .stats-grid {
+            max-width: 1050px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            text-align: center;
+        }
+
+        .stat h2 {
+            color: #198754;
+            margin: 0;
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .stat p {
+            color: #6c757d;
+            margin: 7px 0 0;
+        }
+
+
+        /* ================= FEATURES ================= */
+
+        .features {
+            padding: 75px 20px;
+            background: #fff;
+        }
+
+        .heading {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 42px;
+        }
+
+        .heading h2 {
+            font-size: 35px;
+            margin-bottom: 12px;
+        }
+
+        .heading p {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+
+        .feature-grid {
+            max-width: 1100px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .feature-card {
+            border: 1px solid #e9efeb;
+            border-radius: 18px;
+            padding: 28px;
+            background: white;
+            cursor: pointer;
+            transition: .3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            left: 0;
+            bottom: 0;
+            background: #198754;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: .3s;
+        }
+
+        .feature-card:hover::after,
+        .feature-card.active::after {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover,
+        .feature-card.active {
+            transform: translateY(-7px);
+            border-color: #198754;
+            box-shadow: 0 14px 32px rgba(25, 135, 84, .12);
+        }
+
+        .feature-icon {
+            width: 55px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e8f7ef;
+            border-radius: 15px;
+            font-size: 27px;
+            margin-bottom: 18px;
+        }
+
+        .feature-card h3 {
+            margin: 0 0 10px;
+            font-size: 20px;
+        }
+
+        .feature-card p {
+            color: #6c757d;
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        .learn-more {
+            display: inline-block;
+            margin-top: 18px;
+            color: #198754;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .feature-detail {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            color: #5f6e65;
+            line-height: 1.6;
+            transition: .4s ease;
+        }
+
+        .feature-card.active .feature-detail {
+            max-height: 120px;
+            opacity: 1;
+            margin-top: 13px;
+        }
+
+
+        /* ================= GOAL ================= */
+
+        .goal-section {
+            padding: 75px 20px;
+            background: #f6faf8;
+        }
+
+        .goal-box {
+            max-width: 1050px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #dff5e8;
+            color: #198754;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .goal-text h2 {
+            font-size: 35px;
+            margin-bottom: 15px;
+        }
+
+        .goal-text p {
+            color: #6c757d;
+            line-height: 1.7;
+        }
+
+        .goal-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .06);
+        }
+
+        .goal-top {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .goal-top strong {
+            font-size: 17px;
+        }
+
+        .goal-percent {
+            color: #198754;
+            font-weight: 700;
+        }
+
+        .progress {
+            width: 100%;
+            height: 13px;
+            background: #e9efeb;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #198754, #55b981);
+            border-radius: 20px;
+            transition: width 1.4s ease;
+        }
+
+        .goal-bottom {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .goal-button {
+            width: 100%;
+            margin-top: 20px;
+            border: none;
+            background: #198754;
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .goal-button:hover {
+            background: #146c43;
+            transform: translateY(-2px);
+        }
+
+
+        /* ================= MISSION ================= */
+
+        .mission {
+            padding: 75px 20px;
+            background: white;
+        }
+
+        .mission-box {
+            max-width: 1000px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .mission-box h2 {
+            font-size: 35px;
+            margin-bottom: 18px;
+        }
+
+        .mission-box p {
+            color: #6c757d;
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+
+        /* ================= CTA ================= */
+
+        .cta {
+            background: linear-gradient(135deg, #198754, #146c43);
+            color: white;
+            text-align: center;
+            padding: 70px 20px;
+        }
+
+        .cta h2 {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .cta p {
+            opacity: .9;
+            margin-bottom: 25px;
+        }
+
+        .cta a {
+            display: inline-block;
+            background: white;
+            color: #198754;
+            text-decoration: none;
+            padding: 13px 29px;
+            border-radius: 10px;
+            font-weight: 700;
+            transition: .2s ease;
+        }
+
+        .cta a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
+        }
+
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #10231a;
+            color: #b9c7c0;
+            text-align: center;
+            padding: 30px 15px;
+            line-height: 1.7;
+        }
+
+        footer strong {
+            color: white;
+        }
+
+
+        /* ================= ANIMATION ================= */
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(25px);
+            transition: .7s ease;
+        }
+
+        .reveal.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 800px) {
+
+            .navbar-custom {
+                padding: 13px 0;
+            }
+
+            .navbar-inner {
+                padding: 0 20px;
+            }
+
+            .brand {
+                font-size: 20px;
+            }
+
+            .desktop-navigation {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .mobile-menu {
+                padding: 10px 20px 5px;
+            }
+
+            .mobile-menu.open {
+                display: block;
+            }
+
+            .mobile-menu a {
+                display: block;
+                text-decoration: none;
+                color: #29483a;
+                padding: 12px 5px;
+                font-weight: 600;
+                border-bottom: 1px solid #edf2ee;
+            }
+
+            .mobile-menu .mobile-register {
+                color: white;
+                background: #198754;
+                border-radius: 10px;
+                text-align: center;
+                margin-top: 10px;
+                border: none;
+            }
+
+            .hero {
+                padding: 48px 20px 55px;
+            }
+
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 38px;
+            }
+
+            .hero h1 {
+                font-size: 37px;
+            }
+
+            .hero-text {
+                font-size: 16px;
+            }
+
+            .visual-card {
+                transform: none;
+            }
+
+            .visual-card:hover {
+                transform: translateY(-4px);
+            }
+
+            .stats {
+                padding: 30px 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .features,
+            .goal-section,
+            .mission {
+                padding: 60px 20px;
+            }
+
+            .heading h2,
+            .goal-text h2,
+            .mission-box h2 {
+                font-size: 29px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .goal-box {
+                grid-template-columns: 1fr;
+            }
+
+            .cta {
+                padding: 60px 20px;
+            }
+
+            .cta h2 {
+                font-size: 29px;
+            }
+        }
+
+
+        @media (max-width: 450px) {
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .smart-badge {
+                font-size: 13px;
+            }
+
+            .stats-grid {
+                gap: 15px;
+            }
+
+            .stat h2 {
+                font-size: 26px;
+            }
+
+            .stat p {
+                font-size: 13px;
+            }
+
+            .mini-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .goal-bottom {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+
+
+        @media (prefers-reduced-motion: reduce) {
+
+            html {
+                scroll-behavior: auto;
+            }
+
+            .reveal {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
+
+            .progress-bar {
+                transition: none;
+            }
+        }
+
+    </style>
 </head>
+
+
 <body>
 
-<section class="about">
-    <h1>About Smart Finance</h1>
-    <p>
-        Manage budgets, investments, and expenses using AI insights.
-        Make smarter financial decisions easily.
-    </p>
+    <!-- ================= NAVBAR ================= -->
 
-    <div class="cards">
-        <div class="card">Goal-Based Finance</div>
-        <div class="card">Smart Spending</div>
-        <div class="card">Financial Insights</div>
-    </div>
-</section>
+    <nav class="navbar-custom">
+
+        <div class="navbar-inner">
+
+            <a href="{{ url_for('home') }}" class="brand">
+                💰 Smart-Fin AI
+            </a>
+
+            <div class="desktop-navigation">
+
+                <a href="{{ url_for('home') }}" class="nav-link-custom">
+                    Home
+                </a>
+
+                <a href="{{ url_for('about') }}" class="nav-link-custom">
+                    About
+                </a>
+
+                <a href="{{ url_for('contact') }}" class="nav-link-custom">
+                    Contact
+                </a>
+
+                <a href="{{ url_for('login') }}" class="login-button">
+                    Login
+                </a>
+
+                <a href="{{ url_for('register') }}" class="start-button">
+                    Get Started
+                </a>
+
+            </div>
+
+            <button
+                type="button"
+                class="mobile-menu-btn"
+                onclick="toggleMobileMenu()"
+                aria-label="Open navigation menu">
+
+                ☰
+
+            </button>
+
+        </div>
+
+
+        <div class="mobile-menu" id="mobileMenu">
+
+            <a href="{{ url_for('home') }}">
+                Home
+            </a>
+
+            <a href="{{ url_for('about') }}">
+                About
+            </a>
+
+            <a href="{{ url_for('contact') }}">
+                Contact
+            </a>
+
+            <a href="{{ url_for('login') }}">
+                Login
+            </a>
+
+            <a href="{{ url_for('register') }}" class="mobile-register">
+                Get Started →
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero">
+
+        <div class="hero-grid">
+
+            <div class="reveal">
+
+                <div class="smart-badge">
+
+                    <span class="ai-symbol">
+                        AI
+                    </span>
+
+                    Smart • Simple • Personalized
+
+                </div>
+
+
+                <h1>
+                    Meet Your
+                    <span>Personal Finance</span>
+                    Companion
+                </h1>
+
+
+                <p class="hero-text">
+
+                    Smart-Fin AI helps you understand your money,
+                    track your financial activity, build savings
+                    goals and make smarter financial decisions
+                    through a simple and friendly experience.
+
+                </p>
+
+
+                <a href="#features" class="explore-button">
+
+                    Explore Features
+
+                    <span class="explore-arrow">
+                        ↓
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- ================= DASHBOARD VISUAL ================= -->
+
+            <div class="visual-card reveal">
+
+                <div class="visual-header">
+
+                    <div class="visual-title">
+                        📊 Financial Overview
+                    </div>
+
+                    <div class="status">
+                        ● Healthy
+                    </div>
+
+                </div>
+
+
+                <div class="balance">
+
+                    <small>
+                        Current Savings
+                    </small>
+
+                    <h2>
+                        ₹44,000
+                    </h2>
+
+                </div>
+
+
+                <div class="mini-grid">
+
+                    <div class="mini-card">
+
+                        <small>
+                            Income
+                        </small>
+
+                        <strong class="income">
+                            ₹50,000
+                        </strong>
+
+                    </div>
+
+
+                    <div class="mini-card">
+
+                        <small>
+                            Expenses
+                        </small>
+
+                        <strong class="expense">
+                            ₹6,000
+                        </strong>
+
+                    </div>
+
+
+                    <div class="mini-card">
+
+                        <small>
+                            Saving Rate
+                        </small>
+
+                        <strong>
+                            88%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="mini-card">
+
+                        <small>
+                            Health Score
+                        </small>
+
+                        <strong class="income">
+                            90/100
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= STATS ================= -->
+
+    <section class="stats">
+
+        <div class="stats-grid">
+
+            <div class="stat reveal">
+
+                <h2 data-target="100">
+                    0%
+                </h2>
+
+                <p>
+                    Simple Tracking
+                </p>
+
+            </div>
+
+
+            <div class="stat reveal">
+
+                <h2 data-target="3">
+                    0+
+                </h2>
+
+                <p>
+                    Finance Tools
+                </p>
+
+            </div>
+
+
+            <div class="stat reveal">
+
+                <h2 data-target="24">
+                    0/7
+                </h2>
+
+                <p>
+                    Easy Access
+                </p>
+
+            </div>
+
+
+            <div class="stat reveal">
+
+                <h2 data-target="1">
+                    0
+                </h2>
+
+                <p>
+                    Unified Dashboard
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= FEATURES ================= -->
+
+    <section class="features" id="features">
+
+        <div class="heading reveal">
+
+            <h2>
+                Everything Starts With Better Financial Habits
+            </h2>
+
+            <p>
+                Explore how Smart-Fin AI can help you organize
+                and understand different parts of your financial life.
+            </p>
+
+        </div>
+
+
+        <div class="feature-grid">
+
+
+            <div class="feature-card active reveal">
+
+                <div class="feature-icon">
+                    🎯
+                </div>
+
+                <h3>
+                    Goal-Based Finance
+                </h3>
+
+                <p>
+                    Create financial goals and keep your progress
+                    visible so you always know what you are working towards.
+                </p>
+
+                <span class="learn-more">
+                    Click to explore →
+                </span>
+
+                <div class="feature-detail">
+                    Set a target, track your saved amount and
+                    understand how close you are to your financial goal.
+                </div>
+
+            </div>
+
+
+            <div class="feature-card reveal">
+
+                <div class="feature-icon">
+                    💳
+                </div>
+
+                <h3>
+                    Smart Spending
+                </h3>
+
+                <p>
+                    Record transactions and understand your
+                    spending habits with a simple financial overview.
+                </p>
+
+                <span class="learn-more">
+                    Click to explore →
+                </span>
+
+                <div class="feature-detail">
+                    Keep your income and expenses organized so
+                    your dashboard gives you a clearer picture of your money.
+                </div>
+
+            </div>
+
+
+            <div class="feature-card reveal">
+
+                <div class="feature-icon">
+                    🧠
+                </div>
+
+                <h3>
+                    Smart Insights
+                </h3>
+
+                <p>
+                    Get easy-to-understand financial insights
+                    based on your income, expenses and savings activity.
+                </p>
+
+                <span class="learn-more">
+                    Click to explore →
+                </span>
+
+                <div class="feature-detail">
+                    Use your financial activity to understand saving
+                    patterns and make more informed decisions.
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= GOAL ================= -->
+
+    <section class="goal-section">
+
+        <div class="goal-box">
+
+            <div class="goal-text reveal">
+
+                <div class="badge">
+                    🎯 Goal Tracker
+                </div>
+
+                <h2>
+                    Turn Financial Goals Into Progress
+                </h2>
+
+                <p>
+                    A goal becomes easier to manage when you can
+                    actually see your progress. Smart-Fin AI keeps
+                    your savings targets visible and understandable.
+                </p>
+
+            </div>
+
+
+            <div class="goal-card reveal">
+
+                <div class="goal-top">
+
+                    <strong>
+                        🏠 Buy a House
+                    </strong>
+
+                    <span class="goal-percent" id="goalPercent">
+                        0%
+                    </span>
+
+                </div>
+
+
+                <div class="progress">
+
+                    <div
+                        class="progress-bar"
+                        id="progressBar">
+                    </div>
+
+                </div>
+
+
+                <div class="goal-bottom">
+
+                    <span id="savedAmount">
+                        Saved: ₹0
+                    </span>
+
+                    <span>
+                        Target: ₹2,00,000
+                    </span>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="goal-button"
+                    id="goalButton">
+
+                    Show Goal Progress
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= MISSION ================= -->
+
+    <section class="mission">
+
+        <div class="mission-box reveal">
+
+            <div class="badge">
+                💚 Our Mission
+            </div>
+
+            <h2>
+                Make Personal Finance Less Complicated
+            </h2>
+
+            <p>
+                Personal finance does not have to feel confusing.
+                Smart-Fin AI brings income tracking, expense
+                management, savings goals and financial insights
+                together in one simple platform — helping users
+                understand their money and build better financial habits.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= CTA ================= -->
+
+    <section class="cta">
+
+        <h2>
+            Ready to Take Control?
+        </h2>
+
+        <p>
+            Start your financial journey with Smart-Fin AI.
+        </p>
+
+        <a href="{{ url_for('register') }}">
+            Get Started →
+        </a>
+
+    </section>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <strong>
+            Smart-Fin AI
+        </strong>
+
+        <br>
+
+        Personal Finance Advisor
+
+        <br>
+
+        © 2026 Smart-Fin AI. All rights reserved.
+
+    </footer>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        /* MOBILE MENU */
+
+        function toggleMobileMenu() {
+
+            const menu =
+                document.getElementById("mobileMenu");
+
+            menu.classList.toggle("open");
+
+        }
+
+
+        /* SCROLL REVEAL */
+
+        const revealElements =
+            document.querySelectorAll(".reveal");
+
+
+        const revealObserver =
+            new IntersectionObserver(
+                function (entries) {
+
+                    entries.forEach(function (entry) {
+
+                        if (entry.isIntersecting) {
+
+                            entry.target.classList.add("show");
+
+                        }
+
+                    });
+
+                },
+                {
+                    threshold: 0.15
+                }
+            );
+
+
+        revealElements.forEach(function (element) {
+
+            revealObserver.observe(element);
+
+        });
+
+
+        /* NUMBER ANIMATION */
+
+        const statNumbers =
+            document.querySelectorAll("[data-target]");
+
+
+        function animateNumber(element) {
+
+            const target =
+                Number(element.dataset.target);
+
+            const duration = 1000;
+
+            const start =
+                performance.now();
+
+
+            function update(time) {
+
+                const progress =
+                    Math.min(
+                        (time - start) / duration,
+                        1
+                    );
+
+
+                const current =
+                    Math.floor(progress * target);
+
+
+                if (target === 100) {
+
+                    element.textContent =
+                        current + "%";
+
+                }
+
+                else if (target === 24) {
+
+                    element.textContent =
+                        current + "/7";
+
+                }
+
+                else if (target === 3) {
+
+                    element.textContent =
+                        current + "+";
+
+                }
+
+                else {
+
+                    element.textContent =
+                        current;
+
+                }
+
+
+                if (progress < 1) {
+
+                    requestAnimationFrame(update);
+
+                }
+
+            }
+
+
+            requestAnimationFrame(update);
+
+        }
+
+
+        const statObserver =
+            new IntersectionObserver(
+                function (entries, observer) {
+
+                    entries.forEach(function (entry) {
+
+                        if (entry.isIntersecting) {
+
+                            animateNumber(
+                                entry.target
+                            );
+
+                            observer.unobserve(
+                                entry.target
+                            );
+
+                        }
+
+                    });
+
+                },
+                {
+                    threshold: 0.5
+                }
+            );
+
+
+        statNumbers.forEach(function (element) {
+
+            statObserver.observe(element);
+
+        });
+
+
+        /* FEATURE CARD INTERACTION */
+
+        const featureCards =
+            document.querySelectorAll(".feature-card");
+
+
+        featureCards.forEach(function (card) {
+
+            card.addEventListener(
+                "click",
+                function () {
+
+                    featureCards.forEach(
+                        function (item) {
+
+                            item.classList.remove("active");
+
+                        }
+                    );
+
+
+                    card.classList.add("active");
+
+                }
+            );
+
+        });
+
+
+        /* GOAL PROGRESS */
+
+        const goalButton =
+            document.getElementById("goalButton");
+
+        const progressBar =
+            document.getElementById("progressBar");
+
+        const goalPercent =
+            document.getElementById("goalPercent");
+
+        const savedAmount =
+            document.getElementById("savedAmount");
+
+
+        goalButton.addEventListener(
+            "click",
+            function () {
+
+                progressBar.style.width = "22%";
+
+                goalPercent.textContent =
+                    "22%";
+
+                savedAmount.textContent =
+                    "Saved: ₹44,000";
+
+                goalButton.textContent =
+                    "Goal Progress Updated ✓";
+
+                goalButton.style.background =
+                    "#146c43";
+
+            }
+        );
+
+    </script>
 
 </body>
+
 </html>
