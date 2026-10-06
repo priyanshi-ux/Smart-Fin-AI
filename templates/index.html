@@ -1,1 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Finance</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
 
+<header>
+    <h2>💰 Smart Finance</h2>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <div class="text">
+        <h1>Smart Finance</h1>
+        <p>Manage your finances with AI-powered insights</p>
+        <button onclick="scrollToBudget()">Get Started</button>
+    </div>
+</section>
+
+<section id="budget">
+    <h2>Budget Calculator</h2>
+
+    <input type="number" id="income" placeholder="Enter Income">
+    <input type="number" id="expenses" placeholder="Enter Expenses">
+
+    <button onclick="calculate()">Calculate</button>
+
+    <h3 id="result"></h3>
+</section>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>
