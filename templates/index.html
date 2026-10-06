@@ -49,8 +49,6 @@
             justify-content: space-between;
         }
 
-        /* EXACT HOME BRAND STYLE */
-
         .brand {
             text-decoration: none;
             color: #125737;
@@ -134,12 +132,6 @@
         .hero-content {
             animation: fadeUp 0.8s ease forwards;
         }
-
-
-        /* AI BADGE
-           This is now the FIRST thing in hero.
-           No extra strip above it.
-        */
 
         .hero-badge {
             display: inline-flex;
@@ -434,10 +426,12 @@
         }
 
         .balance {
-            font-size: 31px;
+            font-size: 22px;
             font-weight: 800;
 
             margin: 8px 0;
+
+            line-height: 1.3;
         }
 
         .balance-change {
@@ -466,8 +460,10 @@
         }
 
         .mini-value {
-            font-size: 18px;
-            font-weight: 800;
+            font-size: 13px;
+            font-weight: 700;
+
+            line-height: 1.4;
 
             margin-top: 6px;
         }
@@ -481,7 +477,9 @@
         }
 
 
-        /* CHART */
+        /* =====================================================
+           CHART
+        ===================================================== */
 
         .chart-box {
             margin-top: 15px;
@@ -499,6 +497,11 @@
             font-size: 12px;
 
             margin-bottom: 14px;
+        }
+
+        .chart-header span {
+            color: #7b887f;
+            font-size: 11px;
         }
 
         .chart-bars {
@@ -546,7 +549,9 @@
         }
 
 
-        /* FLOATING AI INSIGHT */
+        /* =====================================================
+           FLOATING AI INSIGHT
+        ===================================================== */
 
         .floating-tip {
             position: absolute;
@@ -958,10 +963,6 @@
 
         /* =====================================================
            FINAL MESSAGE
-           
-           IMPORTANT:
-           Smart financial planning + Track Analyze Save
-           are ONLY HERE, immediately before footer.
         ===================================================== */
 
         .final-message {
@@ -1116,6 +1117,16 @@
 
         .footer-links a:hover {
             color: white;
+        }
+
+        .developer-credit {
+            text-align: center;
+
+            margin-top: 25px;
+
+            font-size: 14px;
+
+            opacity: 0.8;
         }
 
 
@@ -1385,7 +1396,7 @@
             }
 
             .balance {
-                font-size: 27px;
+                font-size: 20px;
             }
 
             .final-points {
@@ -1398,12 +1409,6 @@
             }
 
         }
-            .developer-credit {
-                text-align: center;
-                margin-top: 25px;
-                font-size: 14px;
-                opacity: 0.8;
-             }  
 
     </style>
 </head>
@@ -1453,9 +1458,11 @@
             <a href="{{ url_for('contact') }}">
                 Contact
             </a>
+
             <a href="{{ url_for('admin') }}">
                 Admin
             </a>
+
             <a
                 href="{{ url_for('login') }}"
                 class="login-btn"
@@ -1480,9 +1487,6 @@
 
 <!-- =========================================================
      HERO
-     
-     IMPORTANT:
-     No "Smart financial planning..." strip here.
 ========================================================= -->
 
 <section class="hero">
@@ -1490,8 +1494,6 @@
 
     <div class="hero-content">
 
-
-        <!-- AI BADGE -->
 
         <div class="hero-badge">
 
@@ -1504,8 +1506,6 @@
         </div>
 
 
-        <!-- MAIN HEADLINE -->
-
         <h1>
 
             Take Control
@@ -1516,8 +1516,6 @@
         </h1>
 
 
-        <!-- DESCRIPTION -->
-
         <p class="hero-description">
 
             Smart-Fin AI helps you track income and expenses,
@@ -1526,8 +1524,6 @@
 
         </p>
 
-
-        <!-- TRUST / VALUE POINTS -->
 
         <div class="trust-row">
 
@@ -1598,8 +1594,6 @@
         </div>
 
 
-        <!-- HERO BUTTONS -->
-
         <div class="hero-buttons">
 
             <a
@@ -1636,7 +1630,7 @@
             Smart Insight
 
             <strong>
-                You're saving well!
+                Plan smarter today!
             </strong>
 
         </div>
@@ -1648,7 +1642,7 @@
             <div class="preview-top">
 
                 <div class="preview-title">
-                    Financial Overview
+                    Financial Dashboard
                 </div>
 
 
@@ -1669,12 +1663,12 @@
 
 
                 <div class="balance">
-                    ₹24,580
+                    Track your balance
                 </div>
 
 
                 <div class="balance-change">
-                    ↑ 12.4% from last month
+                    Stay updated with your finances
                 </div>
 
             </div>
@@ -1692,7 +1686,7 @@
                     </div>
 
                     <div class="mini-value income">
-                        ₹38,500
+                        Monitor your income
                     </div>
 
                 </div>
@@ -1705,7 +1699,7 @@
                     </div>
 
                     <div class="mini-value expense">
-                        ₹13,920
+                        Manage your spending
                     </div>
 
                 </div>
@@ -1726,7 +1720,7 @@
                     </strong>
 
                     <span>
-                        6 Months
+                        Your financial trends
                     </span>
 
                 </div>
@@ -2006,8 +2000,6 @@
 
 
 
-    <!-- INTERACTIVE FEATURE DETAIL -->
-
     <div
         class="feature-detail"
         id="featureDetail"
@@ -2147,11 +2139,6 @@
 
 <!-- =========================================================
      FINAL MESSAGE
-     
-     THIS IS THE ONLY PLACE WHERE:
-     "Smart financial planning, powered by AI"
-     "Track / Analyze / Save"
-     APPEARS.
 ========================================================= -->
 
 <section class="final-message">
@@ -2246,15 +2233,12 @@
 
     </div>
 
-   
-
-    <!-- tumhara existing footer content -->
 
     <p class="developer-credit">
         Designed &amp; developed with ❤️ by Priyanshi Kushwaha
     </p>
 
- 
+
 </footer>
 
 
