@@ -980,6 +980,79 @@ def forgot_password():
         "forgot_password.html"
     )
 # =========================
+# ADMIN PANEL
+# =========================
+
+ADMIN_USERNAME = "admin"
+ADMIN_PASSWORD = "Priya@4321"
+
+
+@app.route("/admin", methods=["GET", "POST"])
+def admin():
+
+    # Admin login
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "")
+
+        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+            session["admin"] = True
+            return redirect("/admin")
+
+        flash("Invalid admin username or password.", "info")
+        return redirect("/admin")
+
+    # Already logged in as admin
+    if session.get("admin"):
+
+        users = User.query.order_by(User.id.desc()).all()
+
+        transactions = Finance.query.order_by(
+            Finance.created_at.desc()
+        ).all()
+
+        goals = Goal.query.order_by(
+            Goal.id.desc()
+        ).all()
+
+        total_income = round(
+            sum((t.income or 0) for t in transactions),
+            2
+        )
+
+        total_expense = round(
+            sum((t.expense or 0) for t in transactions),
+            2
+        )
+
+        total_users = len(users)
+        total_transactions = len(transactions)
+        total_goals = len(goals)
+
+        recent_users = users[:5]
+        recent_transactions = transactions[:8]
+
+        return render_template(
+            "admin.html",
+            users=users,
+            recent_users=recent_users,
+            recent_transactions=recent_transactions,
+            total_users=total_users,
+            total_transactions=total_transactions,
+            total_goals=total_goals,
+            total_income=total_income,
+            total_expense=total_expense
+        )
+
+    # Admin login page
+    return render_template("admin.html", login=True)
+
+
+@app.route("/admin/logout")
+def admin_logout():
+    session.pop("admin", None)
+    return redirect("/admin")
+# =========================
 # LOGOUT
 # =========================
 
